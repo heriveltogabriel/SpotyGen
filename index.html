@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Generator - Smart AI Music Curator</title>
+    <meta name="description" content="Crie playlists incríveis no seu Spotify baseadas em seus artistas, cantores e discos favoritos com um clique.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (for beautiful icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background glowing auras -->
+    <div class="glow-auras">
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <i data-lucide="music-4" class="spotify-green-text icon-logo"></i>
+                <h1>Spoty<span>Gen</span></h1>
+            </div>
+            
+            <div class="header-actions">
+                <button id="btn-settings" class="btn-icon" title="Configurações do Client ID">
+                    <i data-lucide="settings"></i>
+                </button>
+                <div id="user-profile" class="user-profile hidden">
+                    <img id="user-avatar" src="" alt="Avatar" class="avatar">
+                    <div class="user-info-text" style="display: flex; flex-direction: column; line-height: 1.2;">
+                        <span id="user-name" style="font-weight: 600; font-size: 0.85rem;">Nome do Usuário</span>
+                        <span id="user-email" style="font-size: 0.7rem; color: var(--text-muted);">email@exemplo.com</span>
+                    </div>
+                    <button id="btn-logout" class="btn-secondary btn-sm">Sair</button>
+                </div>
+                <button id="btn-login" class="btn-primary">
+                    <i data-lucide="log-in"></i> Conectar Spotify
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Setup & Config ID Alert Banner if not configured -->
+            <div id="setup-banner" class="banner hidden">
+                <div class="banner-content">
+                    <i data-lucide="alert-circle" class="banner-icon"></i>
+                    <div>
+                        <h3>Spotify Client ID Necessário</h3>
+                        <p>Para conectar com a API do Spotify, precisamos do seu Client ID. Clique em configurações para preencher.</p>
+                    </div>
+                </div>
+                <button id="btn-setup-now" class="btn-primary btn-sm">Configurar</button>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Search & Options Panel -->
+                <section class="panel glass-panel search-panel">
+                    <div class="panel-header">
+                        <i data-lucide="sparkles" class="spotify-green-text"></i>
+                        <h2>Criar Nova Playlist</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="search-input">O que você deseja ouvir?</label>
+                        <div class="search-box">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="search-input" placeholder="Ex: Daft Punk, Coldplay, Abbey Road..." autocomplete="off" disabled>
+                        </div>
+                    </div>
+
+                    <div class="options-group">
+                        <label>Tipo de Playlist</label>
+                        <div class="tabs">
+                            <button class="tab-btn active" data-type="artist-top">
+                                <i data-lucide="user"></i> Top Músicas
+                            </button>
+                            <button class="tab-btn" data-type="album">
+                                <i data-lucide="disc"></i> Álbum Inteiro
+                            </button>
+                            <button class="tab-btn" data-type="artist-mix">
+                                <i data-lucide="shuffle"></i> Mix de Similares
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="search-results-container" class="search-results-container hidden">
+                        <label>Resultados da Busca</label>
+                        <div id="search-results" class="search-results-list">
+                            <!-- JS will populate results here -->
+                        </div>
+                    </div>
+
+                    <div class="playlist-settings-group hidden" id="playlist-meta-settings">
+                        <div class="form-group">
+                            <label for="playlist-title">Nome da Playlist</label>
+                            <input type="text" id="playlist-title" placeholder="Minha Playlist Gerada">
+                        </div>
+                        <div class="form-group">
+                            <label for="playlist-desc">Descrição</label>
+                            <textarea id="playlist-desc" rows="2" placeholder="Playlist criada automaticamente pelo SpotyGen."></textarea>
+                        </div>
+                        <button id="btn-generate-playlist" class="btn-success btn-full">
+                            <i data-lucide="plus-circle"></i> Criar no Spotify
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Preview Panel -->
+                <section class="panel glass-panel preview-panel">
+                    <div class="panel-header">
+                        <i data-lucide="list-music" class="spotify-green-text"></i>
+                        <h2>Pré-visualização das Músicas</h2>
+                    </div>
+                    
+                    <div id="preview-placeholder" class="preview-placeholder">
+                        <i data-lucide="music" class="placeholder-icon"></i>
+                        <p>Busque um artista ou disco e selecione um resultado para pré-visualizar as faixas que serão incluídas na sua playlist.</p>
+                    </div>
+
+                    <div id="preview-content" class="preview-content hidden">
+                        <div class="selected-item-card">
+                            <img id="selected-item-img" src="" alt="Capa">
+                            <div class="selected-item-info">
+                                <span class="badge" id="selected-item-badge">Artista</span>
+                                <h3 id="selected-item-title">Nome do Artista</h3>
+                                <p id="selected-item-subtitle">Subtítulo ou info extra</p>
+                            </div>
+                        </div>
+
+                        <div class="tracklist-container">
+                            <div class="tracklist-header">
+                                <span class="col-num">#</span>
+                                <span class="col-title">Título</span>
+                                <span class="col-album">Álbum</span>
+                                <span class="col-duration"><i data-lucide="clock" class="icon-sm"></i></span>
+                            </div>
+                            <div id="track-list" class="track-list">
+                                <!-- Track rows populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Desenvolvido com <i data-lucide="heart" class="heart-icon"></i> usando a Spotify Web API.</p>
+        </footer>
+    </div>
+
+    <!-- Client ID Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <div class="modal-header">
+                <h2>Configurações de Conexão</h2>
+                <button id="btn-close-modal" class="btn-icon-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="settings-help">Para permitir que o SpotyGen acesse o Spotify, você precisa registrar um App e informar o Client ID.</p>
+                
+                <div class="step-guide">
+                    <h4>Como conseguir o Client ID:</h4>
+                    <ol>
+                        <li>Acesse o <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Dashboard de Desenvolvedor do Spotify</a>.</li>
+                        <li>Crie um aplicativo (App) com qualquer nome.</li>
+                        <li>Nas configurações do App, configure o **Redirect URI** para: <br><code id="uri-display">http://localhost:3000/</code></li>
+                        <li>Copie o **Client ID** e cole abaixo.</li>
+                    </ol>
+                </div>
+
+                <div class="form-group">
+                    <label for="client-id-input">Spotify Client ID</label>
+                    <input type="text" id="client-id-input" placeholder="Cole seu Client ID aqui">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-save-settings" class="btn-success">Salvar Configurações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="config.js?v=1.1"></script>
+    <script src="app.js?v=1.1"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

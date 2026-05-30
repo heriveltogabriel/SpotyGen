@@ -478,14 +478,20 @@ function renderTracklist(item, badgeText, subtitleText, tracks) {
     }
 
     // Gerar metadados padrão para a playlist
-    const date = new Date();
-    const month = date.toLocaleString('pt-BR', { month: 'long' });
-    const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1);
-    const year = date.getFullYear();
-    const formattedDate = `${monthCapitalized}/${year}`;
+    let defaultTitle = '';
+    if (state.searchType === 'album') {
+        const artistNames = item.artists ? item.artists.map(a => a.name).join(', ') : '';
+        defaultTitle = `[${artistNames} - ${item.name}]`;
+    } else if (state.searchType === 'artist-top') {
+        defaultTitle = `[${item.name} - Top Músicas]`;
+    } else if (state.searchType === 'artist-mix') {
+        defaultTitle = `[${item.name} - Mix]`;
+    } else {
+        defaultTitle = `[${item.name}]`;
+    }
 
-    DOM.playlistTitle.value = `${item.name} - LP da Semana - ${formattedDate}`;
-    DOM.playlistDesc.value = `LP da Semana - Conversar em Vinil\n${item.name} - ${formattedDate}`;
+    DOM.playlistTitle.value = defaultTitle;
+    DOM.playlistDesc.value = 'LP da Semana';
 
     DOM.previewPlaceholder.classList.add('hidden');
     DOM.previewContent.classList.remove('hidden');

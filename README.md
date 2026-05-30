@@ -124,6 +124,17 @@ Após a instalação, é altamente recomendado que você altere as credenciais p
   *(Substitua `novo_usuario` pelo nome desejado. O parâmetro `-c` recria o arquivo limpando o antigo).*
 
 
+## 🎛️ Gerenciamento do Showcase Público
+
+No final do painel administrativo do gerador (`index.html`), há uma seção dedicada a gerenciar a página pública do **LP da Semana**:
+
+* **Remover Última Playlist**: Exclui do mural público (`lps.html`) a última playlist que você gerou.
+* **Limpar Todas as Playlists**: Limpa por completo a página pública, deixando-a sem nenhum link (estado inicial).
+
+> [!NOTE]
+> Nenhuma dessas ações apaga ou edita as playlists na sua conta do Spotify. Elas apenas controlam as referências salvas na página pública. Além disso, essas requisições são protegidas e exigem a mesma senha do painel de administração.
+
+
 ### Como funciona o OAuth PKCE
 O SpotyGen não armazena o seu token de acesso no servidor. Ao clicar em **Conectar Spotify**, um código aleatório (`code_verifier`) e seu hash SHA256 (`code_challenge`) são gerados no seu próprio navegador. 
 

@@ -94,13 +94,15 @@ Disponibilizamos o script automatizado `install.sh` que faz a instalação compl
 
 ### O que o script realiza de forma automatizada:
 1. Instala o Nginx, Certbot e as ferramentas do Apache/Nginx (`httpd-tools`).
-2. Copia os arquivos da aplicação (`index.html`, `style.css`, `app.js`, `config.js`) para a pasta de hospedagem `/usr/share/nginx/html`.
-3. Ajusta o proprietário e permissões de leitura dos arquivos para o usuário do Nginx.
-4. Gera um arquivo de autenticação básica `/etc/nginx/.htpasswd` com credenciais padrão (`admin`/`spotygen123`).
-5. Solicita e gera o certificado SSL Let's Encrypt para o domínio configurado.
-6. Cria o arquivo de configuração `/etc/nginx/conf.d/spotygen.conf` incluindo regras HTTPS, HTTP/2 e as regras do Basic Auth.
-7. Atualiza o contexto do **SELinux** para permitir que o Nginx leia as novas configurações e arquivos de site sem dar erro `403 Forbidden`.
-8. Habilita o Nginx na inicialização do sistema e reinicia o serviço.
+2. Copia os arquivos da aplicação (`index.html`, `style.css`, `app.js`, `config.js`, `lps.html`, `lps.css`, `logo.jpg`, `server.py`) para a pasta de hospedagem `/usr/share/nginx/html`.
+3. Instala e registra o serviço do backend do SpotyGen (`spotygen-backend.service` via systemd) para persistência local em Python.
+4. Ajusta o proprietário e permissões de leitura dos arquivos para o usuário do Nginx.
+5. Gera um arquivo de autenticação básica `/etc/nginx/.htpasswd` com credenciais padrão (`admin`/`spotygen123`).
+6. Solicita e gera o certificado SSL Let's Encrypt para o domínio configurado.
+7. Cria o arquivo de configuração `/etc/nginx/conf.d/spotygen.conf` incluindo regras HTTPS, HTTP/2, as regras do Basic Auth para o gerador, e rotas públicas/livres de senha para a página de exibição (`/lps.html`), estilos, logo e API.
+8. Atualiza o contexto do **SELinux** para permitir que o Nginx leia as novas configurações e arquivos de site sem dar erro `403 Forbidden`.
+9. Habilita o boolean do SELinux (`httpd_can_network_connect`) para permitir que o Nginx se conecte ao serviço de persistência local na porta 5000.
+10. Habilita o Nginx e o backend na inicialização do sistema e inicia os serviços.
 
 ---
 

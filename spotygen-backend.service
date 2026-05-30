@@ -1,0 +1,15 @@
+[Unit]
+Description=SpotyGen Backend Service
+After=network.target
+
+[Service]
+Type=simple
+User=nginx
+Group=nginx
+WorkingDirectory=/usr/share/nginx/html
+ExecStart=/usr/bin/python3 /usr/share/nginx/html/server.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

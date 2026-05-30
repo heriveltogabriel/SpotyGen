@@ -551,6 +551,32 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
                 throw new Error(`Etapa 2 (Adicionar Músicas) falhou: ${err2.message}`);
             }
 
+            // Registrar no backend público do SpotyGen
+            try {
+                let imageUrl = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80';
+                if (state.selectedItem && state.selectedItem.images && state.selectedItem.images.length > 0) {
+                    imageUrl = state.selectedItem.images[0].url;
+                } else if (state.currentTracks && state.currentTracks[0] && state.currentTracks[0].album && state.currentTracks[0].album.images && state.currentTracks[0].album.images.length > 0) {
+                    imageUrl = state.currentTracks[0].album.images[0].url;
+                }
+
+                await fetch('/api/playlists', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: title,
+                        description: description || `Playlist criada por SpotyGen`,
+                        spotifyUrl: playlist.external_urls.spotify,
+                        imageUrl: imageUrl
+                    })
+                });
+                console.log('Playlist cadastrada no backend com sucesso!');
+            } catch (errBackend) {
+                console.error('Erro ao cadastrar playlist no backend:', errBackend);
+            }
+
             showToast(`Playlist "${title}" criada com sucesso no seu Spotify!`, 'success');
             
             // Resetar formulário

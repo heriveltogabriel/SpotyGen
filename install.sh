@@ -56,7 +56,13 @@ echo -e "${YELLOW}[2/6] Configurando Diretório Web e copiando arquivos...${NC}"
 mkdir -p "$WEB_ROOT"
 # Se executado a partir da pasta clonada do repositório, copia os arquivos do app
 if [ -f "index.html" ] && [ -f "app.js" ]; then
-  cp index.html style.css app.js config.js "$WEB_ROOT/"
+  cp index.html style.css app.js config.js lps.html lps.css logo.jpg server.py "$WEB_ROOT/"
+  # Copiar serviço systemd
+  if [ -f "spotygen-backend.service" ]; then
+    cp spotygen-backend.service /etc/systemd/system/
+    chown root:root /etc/systemd/system/spotygen-backend.service
+    chmod 644 /etc/systemd/system/spotygen-backend.service
+  fi
   echo -e "${GREEN}Arquivos copiados com sucesso para $WEB_ROOT${NC}"
 else
   echo -e "${YELLOW}Aviso: Arquivos fonte não encontrados no diretório atual. Clone o repositório ou copie os arquivos manualmente para $WEB_ROOT.${NC}"
@@ -109,6 +115,34 @@ server {
     location / {
         try_files \$uri \$uri/ =404;
     }
+
+    # Página pública do showcase (LP da Semana)
+    location = /lps.html {
+        auth_basic off;
+        try_files \$uri =404;
+    }
+
+    # Estilos da página pública
+    location = /lps.css {
+        auth_basic off;
+        try_files \$uri =404;
+    }
+
+    # Logotipo público
+    location = /logo.jpg {
+        auth_basic off;
+        try_files \$uri =404;
+    }
+
+    # Proxy para API de persistência das playlists
+    location /api/playlists {
+        auth_basic off;
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
 }
 EOF
 
@@ -119,8 +153,20 @@ if [ -x "$(command -v restorecon)" ]; then
   restorecon -R -v "$WEB_ROOT" || true
 fi
 
-echo -e "${YELLOW}[6/6] Reiniciando e habilitando Nginx...${NC}"
+# Configurar SELinux para permitir que o Nginx conecte no backend Python local
+if [ -x "$(command -v setsebool)" ]; then
+  echo -e "${YELLOW}Configurando permissões de rede do SELinux para o Nginx...${NC}"
+  setsebool -P httpd_can_network_connect 1 || true
+fi
+
+echo -e "${YELLOW}[6/6] Reiniciando e habilitando serviços...${NC}"
 systemctl daemon-reload
+# Ativar e rodar o backend
+if [ -f "/etc/systemd/system/spotygen-backend.service" ]; then
+  systemctl enable spotygen-backend.service
+  systemctl restart spotygen-backend.service
+fi
+# Ativar e rodar o nginx
 systemctl enable nginx
 systemctl restart nginx
 
@@ -129,8 +175,9 @@ nginx -t
 
 echo -e "${GREEN}=====================================================${NC}"
 echo -e "${GREEN}  Instalação concluída com sucesso!                  ${NC}"
-echo -e "${GREEN}  Acesse o aplicativo em: https://$DOMAIN          ${NC}"
-echo -e "${GREEN}  Usuário: $BASIC_AUTH_USER                          ${NC}"
-echo -e "${GREEN}  Senha: $BASIC_AUTH_PASS                            ${NC}"
+echo -e "${GREEN}  Gerador Admin: https://$DOMAIN                      ${NC}"
+echo -e "${GREEN}  Página Pública (LP da Semana): https://$DOMAIN/lps.html ${NC}"
+echo -e "${GREEN}  Usuário Admin: $BASIC_AUTH_USER                    ${NC}"
+echo -e "${GREEN}  Senha Admin: $BASIC_AUTH_PASS                      ${NC}"
 echo -e "${GREEN}=====================================================${NC}"
 echo -e "${YELLOW}Dica: Altere a senha executando: sudo htpasswd /etc/nginx/.htpasswd $BASIC_AUTH_USER${NC}"

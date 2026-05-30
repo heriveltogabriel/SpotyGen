@@ -11,13 +11,14 @@ A aplicação utiliza puramente tecnologias client-side (HTML5, CSS3, Vanilla JS
 ## 🚀 Como Rodar e Acessar
 
 ### Modo Local (Desenvolvimento)
-- **URL Padrão**: `http://localhost:3000`
-- Nenhuma autenticação básica é requerida no modo local.
+- **Página Pública (Mural)**: `http://localhost:3000/index.html`
+- **Painel Gerador (Admin)**: `http://localhost:3000/gerador.html` (sem necessidade de senha localmente)
 
 ### Modo Produção (Hospedado no Servidor)
-- **URL de Acesso**: `https://seu-dominio.com/` (ou o IP público configurado)
-- **Usuário de Acesso (Basic Auth)**: `admin`
-- **Senha Padrão**: `spotygen123`
+- **Página Pública (Mural - LP da Semana)**: `https://seu-dominio.com/` (Acesso livre sem senha para o público)
+- **Painel Gerador (Admin)**: `https://seu-dominio.com/gerador.html`
+  - **Usuário de Acesso**: `admin`
+  - **Senha Padrão**: `spotygen123`
 
 ---
 
@@ -94,12 +95,12 @@ Disponibilizamos o script automatizado `install.sh` que faz a instalação compl
 
 ### O que o script realiza de forma automatizada:
 1. Instala o Nginx, Certbot e as ferramentas do Apache/Nginx (`httpd-tools`).
-2. Copia os arquivos da aplicação (`index.html`, `style.css`, `app.js`, `config.js`, `lps.html`, `lps.css`, `logo.jpg`, `server.py`) para a pasta de hospedagem `/usr/share/nginx/html`.
+2. Copia os arquivos da aplicação (`index.html`, `gerador.html`, `style.css`, `app.js`, `config.js`, `lps.css`, `logo.jpg`, `server.py`) para a pasta de hospedagem `/usr/share/nginx/html`.
 3. Instala e registra o serviço do backend do SpotyGen (`spotygen-backend.service` via systemd) para persistência local em Python.
 4. Ajusta o proprietário e permissões de leitura dos arquivos para o usuário do Nginx.
 5. Gera um arquivo de autenticação básica `/etc/nginx/.htpasswd` com credenciais padrão (`admin`/`spotygen123`).
 6. Solicita e gera o certificado SSL Let's Encrypt para o domínio configurado.
-7. Cria o arquivo de configuração `/etc/nginx/conf.d/spotygen.conf` incluindo regras HTTPS, HTTP/2, as regras do Basic Auth para o gerador, e rotas públicas/livres de senha para a página de exibição (`/lps.html`), estilos, logo e API.
+7. Cria o arquivo de configuração `/etc/nginx/conf.d/spotygen.conf` incluindo regras HTTPS, HTTP/2, as regras do Basic Auth para o painel do gerador (`/gerador.html`), e rotas públicas/livres de senha para a página de exibição principal (`/`), estilos, logo e API.
 8. Atualiza o contexto do **SELinux** para permitir que o Nginx leia as novas configurações e arquivos de site sem dar erro `403 Forbidden`.
 9. Habilita o boolean do SELinux (`httpd_can_network_connect`) para permitir que o Nginx se conecte ao serviço de persistência local na porta 5000.
 10. Habilita o Nginx e o backend na inicialização do sistema e inicia os serviços.
@@ -126,9 +127,9 @@ Após a instalação, é altamente recomendado que você altere as credenciais p
 
 ## 🎛️ Gerenciamento do Showcase Público
 
-No final do painel administrativo do gerador (`index.html`), há uma seção dedicada a gerenciar a página pública do **LP da Semana**:
+No final do painel administrativo do gerador (`gerador.html`), há uma seção dedicada a gerenciar a página pública do **LP da Semana**:
 
-* **Remover Última Playlist**: Exclui do mural público (`lps.html`) a última playlist que você gerou.
+* **Remover Última Playlist**: Exclui do mural público (`index.html`) a última playlist que você gerou.
 * **Limpar Todas as Playlists**: Limpa por completo a página pública, deixando-a sem nenhum link (estado inicial).
 
 > [!NOTE]

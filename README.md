@@ -106,12 +106,21 @@ Disponibilizamos o script automatizado `install.sh` que faz a instalação compl
 
 ## 🔒 Gerenciando a Segurança da Aplicação
 
-### Alterando a senha do Basic Auth
-Após a instalação, é altamente recomendado que você altere a senha padrão. Acesse o seu servidor por SSH e digite:
-```bash
-sudo htpasswd /etc/nginx/.htpasswd admin
-```
-Digite a sua nova senha e confirme. A mudança é aplicada instantaneamente.
+### Alterando Usuário e Senha (ou apenas Senha)
+Após a instalação, é altamente recomendado que você altere as credenciais padrão. Acesse o seu servidor por SSH:
+
+* **Para alterar apenas a senha do usuário `admin` atual**:
+  ```bash
+  sudo htpasswd /etc/nginx/.htpasswd admin
+  ```
+  Digite a sua nova senha e confirme.
+
+* **Para alterar o nome do usuário e a senha** (substituindo o antigo):
+  ```bash
+  sudo htpasswd -c /etc/nginx/.htpasswd novo_usuario
+  ```
+  *(Substitua `novo_usuario` pelo nome desejado. O parâmetro `-c` recria o arquivo limpando o antigo).*
+
 
 ### Como funciona o OAuth PKCE
 O SpotyGen não armazena o seu token de acesso no servidor. Ao clicar em **Conectar Spotify**, um código aleatório (`code_verifier`) e seu hash SHA256 (`code_challenge`) são gerados no seu próprio navegador. 

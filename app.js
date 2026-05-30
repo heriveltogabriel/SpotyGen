@@ -481,13 +481,13 @@ function renderTracklist(item, badgeText, subtitleText, tracks) {
     let defaultTitle = '';
     if (state.searchType === 'album') {
         const artistNames = item.artists ? item.artists.map(a => a.name).join(', ') : '';
-        defaultTitle = `[${artistNames} - ${item.name}]`;
+        defaultTitle = `${artistNames} - ${item.name}`;
     } else if (state.searchType === 'artist-top') {
-        defaultTitle = `[${item.name} - Top Músicas]`;
+        defaultTitle = `${item.name} - Top Músicas`;
     } else if (state.searchType === 'artist-mix') {
-        defaultTitle = `[${item.name} - Mix]`;
+        defaultTitle = `${item.name} - Mix`;
     } else {
-        defaultTitle = `[${item.name}]`;
+        defaultTitle = `${item.name}`;
     }
 
     DOM.playlistTitle.value = defaultTitle;

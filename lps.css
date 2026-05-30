@@ -308,13 +308,13 @@ body::after {
     color: #ef4444;
 }
 
-.link-admin {
+.link-admin, .link-instagram {
     color: var(--text-secondary);
     text-decoration: none;
     transition: var(--transition-smooth);
 }
 
-.link-admin:hover {
+.link-admin:hover, .link-instagram:hover {
     color: var(--spotify-green);
 }
 

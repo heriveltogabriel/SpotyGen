@@ -21,12 +21,25 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# Variáveis configuráveis
-DOMAIN="150.136.84.82.nip.io"
-EMAIL="heriveltogabriel@gmail.com" # Altere para o seu email de recuperação do Let's Encrypt
+# Variáveis configuráveis (podem ser alteradas aqui ou inseridas interativamente)
+DOMAIN="seu-dominio.com"
+EMAIL="seu-email@provedor.com" # Usado para recuperação do Let's Encrypt
 BASIC_AUTH_USER="admin"
 BASIC_AUTH_PASS="spotygen123"
 WEB_ROOT="/usr/share/nginx/html"
+
+# Interatividade se rodando em terminal interativo e com valores padrão
+if [ -t 0 ]; then
+  if [ "$DOMAIN" = "seu-dominio.com" ]; then
+    read -p "Digite o seu domínio/IP (ex: 150.136.84.82.nip.io ou app.meudominio.com): " INPUT_DOMAIN
+    [ -n "$INPUT_DOMAIN" ] && DOMAIN="$INPUT_DOMAIN"
+  fi
+  if [ "$EMAIL" = "seu-email@provedor.com" ]; then
+    read -p "Digite seu e-mail para alertas do Let's Encrypt: " INPUT_EMAIL
+    [ -n "$INPUT_EMAIL" ] && EMAIL="$INPUT_EMAIL"
+  fi
+fi
+
 
 echo -e "${YELLOW}[1/6] Atualizando pacotes e instalando dependências...${NC}"
 # Ativar repositórios necessários para Oracle Linux / CentOS

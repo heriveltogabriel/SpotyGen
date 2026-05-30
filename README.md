@@ -4,14 +4,20 @@ SpotyGen é um aplicativo web (SPA - Single Page Application) moderno, responsiv
 
 A aplicação utiliza puramente tecnologias client-side (HTML5, CSS3, Vanilla JS) e faz integração direta com a **Spotify Web API** através do fluxo seguro de autorização **OAuth 2.0 com PKCE (Proof Key for Code Exchange)**, eliminando a necessidade de expor credenciais secretas no cliente.
 
+![SpotyGen Dashboard](spotygen_dashboard.png)
+
 ---
 
-## 🚀 Demonstração e Acesso
+## 🚀 Como Rodar e Acessar
 
-A aplicação está hospedada e configurada com HTTPS e proteção de acesso:
-- **URL de Acesso:** [https://150.136.84.82.nip.io/](https://150.136.84.82.nip.io/)
-- **Usuário de Acesso (Basic Auth):** `admin`
-- **Senha Padrão:** `spotygen123`
+### Modo Local (Desenvolvimento)
+- **URL Padrão**: `http://localhost:3000`
+- Nenhuma autenticação básica é requerida no modo local.
+
+### Modo Produção (Hospedado no Servidor)
+- **URL de Acesso**: `https://seu-dominio.com/` (ou o IP público configurado)
+- **Usuário de Acesso (Basic Auth)**: `admin`
+- **Senha Padrão**: `spotygen123`
 
 ---
 
@@ -44,19 +50,19 @@ A aplicação está hospedada e configurada com HTTPS e proteção de acesso:
 
 ## ⚙️ Configuração no Spotify Developer Dashboard
 
-Como a aplicação roda em um domínio próprio seguro (`https://150.136.84.82.nip.io/`), você deve configurar seu aplicativo no painel do Spotify Developer:
+Como a aplicação roda de forma segura no seu domínio ou localmente, você deve configurar as URLs de redirecionamento no painel do Spotify Developer:
 
 1. Acesse o [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
-2. Selecione ou crie o seu aplicativo (ex: `lpdasemna`).
-3. Clique no botão **Edit** ou vá nas configurações.
-4. Adicione o seguinte endereço na lista de **Redirect URIs**:
-   ```
-   https://150.136.84.82.nip.io/
-   ```
-   *Nota: Certifique-se de incluir o `https://` e a barra final `/`.*
+2. Selecione ou crie o seu aplicativo.
+3. Clique no botão **Edit** ou acesse as configurações.
+4. Adicione o seguinte endereço na lista de **Redirect URIs** dependendo do seu ambiente:
+   - Para ambiente local: `http://localhost:3000/`
+   - Para ambiente de produção: `https://seu-dominio.com/`
+   *Nota: Certifique-se de incluir a barra final `/`.*
 5. Salve as alterações.
 6. Copie o seu **Client ID** gerado pelo Spotify.
 7. Acesse a aplicação, clique no ícone de engrenagem ⚙️ no canto superior direito, cole o seu Client ID e salve.
+
 
 ---
 

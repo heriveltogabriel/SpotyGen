@@ -46,6 +46,8 @@ const DOM = {
     playlistTitle: document.getElementById('playlist-title'),
     playlistDesc: document.getElementById('playlist-desc'),
     btnGeneratePlaylist: document.getElementById('btn-generate-playlist'),
+    btnRemoveLast: document.getElementById('btn-remove-last'),
+    btnClearAll: document.getElementById('btn-clear-all'),
     toastContainer: document.getElementById('toast-container')
 };
 
@@ -694,6 +696,61 @@ function checkSetupBanner() {
             DOM.searchInput.disabled = false;
         }
     }
+}
+
+// -------------------------------------------------------------
+// CONTROLES ADMINISTRATIVOS (SHOWCASE PÚBLICO)
+// -------------------------------------------------------------
+if (DOM.btnRemoveLast) {
+    DOM.btnRemoveLast.addEventListener('click', async () => {
+        if (!confirm('Tem certeza que deseja remover a última playlist adicionada da página pública?')) {
+            return;
+        }
+        
+        DOM.btnRemoveLast.disabled = true;
+        try {
+            const response = await fetch('/api/playlists/remove-last', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (response.ok && (data.status === 'success' || data.status === 'ignored')) {
+                showToast(data.message || 'Playlist removida com sucesso.', 'success');
+            } else {
+                throw new Error(data.error || 'Erro desconhecido.');
+            }
+        } catch (error) {
+            console.error(error);
+            showToast(`Falha ao remover playlist: ${error.message}`, 'error');
+        } finally {
+            DOM.btnRemoveLast.disabled = false;
+        }
+    });
+}
+
+if (DOM.btnClearAll) {
+    DOM.btnClearAll.addEventListener('click', async () => {
+        if (!confirm('ATENÇÃO: Isso removerá TODAS as playlists da página pública! Tem certeza que deseja continuar?')) {
+            return;
+        }
+        
+        DOM.btnClearAll.disabled = true;
+        try {
+            const response = await fetch('/api/playlists/clear-all', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (response.ok && data.status === 'success') {
+                showToast(data.message || 'Todas as playlists foram removidas.', 'success');
+            } else {
+                throw new Error(data.error || 'Erro desconhecido.');
+            }
+        } catch (error) {
+            console.error(error);
+            showToast(`Falha ao limpar playlists: ${error.message}`, 'error');
+        } finally {
+            DOM.btnClearAll.disabled = false;
+        }
+    });
 }
 
 // -------------------------------------------------------------

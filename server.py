@@ -72,6 +72,53 @@ class PlaylistHandler(BaseHTTPRequestHandler):
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
+        
+        elif self.path == '/api/playlists/remove-last':
+            try:
+                playlists = []
+                if os.path.exists(FILE_PATH):
+                    with open(FILE_PATH, 'r', encoding='utf-8') as f:
+                        playlists = json.load(f)
+                
+                if len(playlists) > 0:
+                    removed = playlists.pop(0) # Remove a mais recente (do topo)
+                    with open(FILE_PATH, 'w', encoding='utf-8') as f:
+                        json.dump(playlists, f, ensure_ascii=False, indent=2)
+                    status = "success"
+                    msg = f"Removido: {removed.get('name')}"
+                else:
+                    status = "ignored"
+                    msg = "Lista de playlists já está vazia."
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": status, "message": msg}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
+
+        elif self.path == '/api/playlists/clear-all':
+            try:
+                # Grava lista vazia
+                with open(FILE_PATH, 'w', encoding='utf-8') as f:
+                    json.dump([], f, ensure_ascii=False, indent=2)
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success", "message": "Todas as playlists foram removidas da página pública."}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
         else:
             self.send_response(404)
             self.end_headers()

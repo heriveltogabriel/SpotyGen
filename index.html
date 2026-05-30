@@ -147,9 +147,30 @@
                                 <!-- Track rows populated by JS -->
                             </div>
                         </div>
-                    </div>
                 </section>
             </div>
+
+            <!-- Painel de Gerenciamento do Showcase Público -->
+            <section class="panel glass-panel admin-panel" style="margin-top: 24px; padding: 24px;">
+                <div class="panel-header" style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="lock" class="spotify-green-text"></i>
+                    <h2 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Painel de Controle - Showcase Público</h2>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;">
+                    Estes botões gerenciam os links exibidos na página pública do <strong>LP da Semana</strong>. Nenhuma ação nesta área afetará as playlists reais na sua conta do Spotify.
+                </p>
+                <div class="admin-actions" style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <button id="btn-remove-last" class="btn-warning">
+                        <i data-lucide="trash-2" class="icon-sm"></i> Remover Última Playlist
+                    </button>
+                    <button id="btn-clear-all" class="btn-danger">
+                        <i data-lucide="alert-triangle" class="icon-sm"></i> Limpar Todas as Playlists
+                    </button>
+                    <a href="./lps.html" target="_blank" class="btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; padding: 10px 20px; border-radius: 500px; font-size: 0.9rem;">
+                        <i data-lucide="external-link" style="width: 16px; height: 16px;"></i> Ver Página Pública
+                    </a>
+                </div>
+            </section>
         </main>
 
         <!-- Footer -->

@@ -212,6 +212,35 @@ button {
     box-shadow: 0 6px 20px rgba(29, 185, 84, 0.4);
 }
 
+.btn-warning {
+    background-color: #f59e0b;
+    color: #fff;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+}
+
+.btn-warning:hover {
+    background-color: #d97706;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: #fff;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+}
+
+
 .btn-icon {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);

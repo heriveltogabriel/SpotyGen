@@ -82,7 +82,7 @@ body::after {
     padding: 4px;
     background: linear-gradient(135deg, var(--spotify-green), rgba(255, 255, 255, 0.1));
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(29, 185, 84, 0.2);
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,12 +98,12 @@ body::after {
 
 .description-title {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     font-weight: 500;
     line-height: 1.5;
     color: #eae0d5; /* Bege claro combinando com o logotipo */
     max-width: 450px;
-    margin-top: 10px;
+    margin-top: 0;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
     text-align: center;
 }

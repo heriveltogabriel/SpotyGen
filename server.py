@@ -1,10 +1,17 @@
 import json
 import os
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import sys
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 FILE_PATH = '/usr/share/nginx/html/playlists.json'
+DEFAULT_PORT = 5000
 
-class PlaylistHandler(BaseHTTPRequestHandler):
+# Se o diretório do Nginx não existe (rodando localmente), ajusta caminhos e porta padrão
+if not os.path.exists(os.path.dirname(FILE_PATH)):
+    FILE_PATH = 'playlists.json'
+    DEFAULT_PORT = 3000
+
+class PlaylistHandler(SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -24,8 +31,8 @@ class PlaylistHandler(BaseHTTPRequestHandler):
             else:
                 self.wfile.write(b'[]')
         else:
-            self.send_response(404)
-            self.end_headers()
+            # Serve arquivos estáticos locais
+            super().do_GET()
 
     def do_POST(self):
         if self.path == '/api/playlists':
@@ -34,12 +41,12 @@ class PlaylistHandler(BaseHTTPRequestHandler):
             try:
                 new_playlist = json.loads(post_data.decode('utf-8'))
                 
-                # Validation of required fields
+                # Validação de campos obrigatórios
                 required_fields = ['name', 'description', 'spotifyUrl', 'imageUrl']
                 if not all(field in new_playlist for field in required_fields):
                     raise ValueError("Faltando campos obrigatórios na playlist.")
                 
-                # Load existing
+                # Carregar existentes
                 playlists = []
                 if os.path.exists(FILE_PATH):
                     try:
@@ -48,14 +55,14 @@ class PlaylistHandler(BaseHTTPRequestHandler):
                     except Exception:
                         playlists = []
                 
-                # Prepend the new playlist (newest first)
+                # Adicionar no topo (mais recente primeiro)
                 playlists.insert(0, new_playlist)
                 
-                # Save
+                # Salvar
                 with open(FILE_PATH, 'w', encoding='utf-8') as f:
                     json.dump(playlists, f, ensure_ascii=False, indent=2)
                 
-                # Set permissions to Nginx-readable
+                # Permissões do Nginx
                 try:
                     os.chmod(FILE_PATH, 0o664)
                 except Exception:
@@ -124,7 +131,12 @@ class PlaylistHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
 if __name__ == '__main__':
-    # Listen on localhost:5000 (proxied via Nginx)
-    server = HTTPServer(('127.0.0.1', 5000), PlaylistHandler)
-    print("Starting server on port 5000...")
+    port = DEFAULT_PORT
+    if len(sys.argv) > 1:
+        try:
+            port = int(sys.argv[1])
+        except ValueError:
+            pass
+    server = HTTPServer(('0.0.0.0', port), PlaylistHandler)
+    print(f"Starting server on port {port}...")
     server.serve_forever()

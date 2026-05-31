@@ -25,13 +25,15 @@
         <header class="app-header">
             <div class="logo-area">
                 <i data-lucide="music-4" class="spotify-green-text icon-logo"></i>
-                <h1>Spoty<span>Gen</span></h1>
+                <h1>Playlist<span>Gen</span></h1>
             </div>
             
-            <div class="header-actions">
-                <button id="btn-settings" class="btn-icon" title="Configurações do Client ID">
-                    <i data-lucide="settings"></i>
+            <div class="header-actions" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button id="btn-settings" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600;" title="Configurações & Painel de Controle">
+                    <i data-lucide="sliders" style="width: 16px; height: 16px;"></i> Painel
                 </button>
+                
+                <!-- Spotify profile & login -->
                 <div id="user-profile" class="user-profile hidden">
                     <img id="user-avatar" src="" alt="Avatar" class="avatar">
                     <div class="user-info-text" style="display: flex; flex-direction: column; line-height: 1.2;">
@@ -42,6 +44,18 @@
                 </div>
                 <button id="btn-login" class="btn-primary">
                     <i data-lucide="log-in"></i> Conectar Spotify
+                </button>
+
+                <!-- YouTube profile & login -->
+                <div id="youtube-profile" class="user-profile hidden" style="border-color: rgba(255, 0, 0, 0.2);">
+                    <i data-lucide="play" style="color: #ff0000; width: 16px; height: 16px; fill: #ff0000;"></i>
+                    <div class="user-info-text" style="display: flex; flex-direction: column; line-height: 1.2;">
+                        <span id="youtube-user-name" style="font-weight: 600; font-size: 0.85rem;">YouTube Ativo</span>
+                    </div>
+                    <button id="btn-logout-youtube" class="btn-secondary btn-sm">Sair</button>
+                </div>
+                <button id="btn-login-youtube" class="btn-primary" style="background-color: #ff0000; border-color: #ff0000; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25);">
+                    <i data-lucide="play"></i> Conectar YouTube
                 </button>
             </div>
         </header>
@@ -106,10 +120,36 @@
                         </div>
                         <div class="form-group">
                             <label for="playlist-desc">Descrição</label>
-                            <textarea id="playlist-desc" rows="2" placeholder="Playlist criada automaticamente pelo SpotyGen."></textarea>
+                            <textarea id="playlist-desc" rows="2" placeholder="Playlist criada automaticamente pelo PlaylistGen."></textarea>
                         </div>
+                        
+                        <!-- Multi-platform Optional Links -->
+                        <div class="form-group">
+                            <label for="playlist-youtube-url">Link do YouTube Music (Opcional)</label>
+                            <div class="input-with-icon">
+                                <i data-lucide="play-circle" class="input-icon"></i>
+                                <input type="url" id="playlist-youtube-url" placeholder="https://music.youtube.com/playlist?list=...">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="playlist-apple-url">Link do Apple Music (Opcional)</label>
+                            <div class="input-with-icon">
+                                <i data-lucide="music-2" class="input-icon"></i>
+                                <input type="url" id="playlist-apple-url" placeholder="https://music.apple.com/us/playlist/...">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="playlist-deezer-url">Link do Deezer (Opcional)</label>
+                            <div class="input-with-icon">
+                                <i data-lucide="heart" class="input-icon"></i>
+                                <input type="url" id="playlist-deezer-url" placeholder="https://www.deezer.com/playlist/...">
+                            </div>
+                        </div>
+
                         <button id="btn-generate-playlist" class="btn-success btn-full">
-                            <i data-lucide="plus-circle"></i> Criar no Spotify
+                            <i data-lucide="plus-circle"></i> Criar & Publicar LP
                         </button>
                     </div>
                 </section>
@@ -150,27 +190,6 @@
                 </section>
             </div>
 
-            <!-- Painel de Gerenciamento do Showcase Público -->
-            <section class="panel glass-panel admin-panel" style="margin-top: 24px; padding: 24px;">
-                <div class="panel-header" style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="lock" class="spotify-green-text"></i>
-                    <h2 style="font-size: 1.25rem; font-weight: 600; margin: 0;">Painel de Controle - Showcase Público</h2>
-                </div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;">
-                    Estes botões gerenciam os links exibidos na página pública do <strong>LP da Semana</strong>. Nenhuma ação nesta área afetará as playlists reais na sua conta do Spotify.
-                </p>
-                <div class="admin-actions" style="display: flex; gap: 16px; flex-wrap: wrap;">
-                    <button id="btn-remove-last" class="btn-warning">
-                        <i data-lucide="trash-2" class="icon-sm"></i> Remover Última Playlist
-                    </button>
-                    <button id="btn-clear-all" class="btn-danger">
-                        <i data-lucide="alert-triangle" class="icon-sm"></i> Limpar Todas as Playlists
-                    </button>
-                    <a href="./" target="_blank" class="btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; padding: 10px 20px; border-radius: 500px; font-size: 0.9rem;">
-                        <i data-lucide="external-link" style="width: 16px; height: 16px;"></i> Ver Página Pública
-                    </a>
-                </div>
-            </section>
         </main>
 
         <!-- Footer -->
@@ -179,33 +198,72 @@
         </footer>
     </div>
 
-    <!-- Client ID Settings Modal -->
+    <!-- Settings Modal (Tabbed) -->
     <div id="settings-modal" class="modal-overlay hidden">
         <div class="modal glass-panel">
             <div class="modal-header">
-                <h2>Configurações de Conexão</h2>
+                <h2>Painel do Sistema</h2>
                 <button id="btn-close-modal" class="btn-icon-close"><i data-lucide="x"></i></button>
             </div>
-            <div class="modal-body">
-                <p class="settings-help">Para permitir que o SpotyGen acesse o Spotify, você precisa registrar um App e informar o Client ID.</p>
-                
-                <div class="step-guide">
-                    <h4>Como conseguir o Client ID:</h4>
-                    <ol>
-                        <li>Acesse o <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Dashboard de Desenvolvedor do Spotify</a>.</li>
-                        <li>Crie um aplicativo (App) com qualquer nome.</li>
-                        <li>Nas configurações do App, configure o **Redirect URI** para: <br><code id="uri-display">http://localhost:3000/</code></li>
-                        <li>Copie o **Client ID** e cole abaixo.</li>
-                    </ol>
-                </div>
+            
+            <!-- Modal Tabs -->
+            <div class="modal-tabs">
+                <button class="modal-tab-btn active" data-tab="connections">
+                    <i data-lucide="link-2"></i> Conexões
+                </button>
+                <button class="modal-tab-btn" data-tab="showcase">
+                    <i data-lucide="sliders"></i> Showcase Público
+                </button>
+            </div>
 
-                <div class="form-group">
-                    <label for="client-id-input">Spotify Client ID</label>
-                    <input type="text" id="client-id-input" placeholder="Cole seu Client ID aqui">
+            <!-- Tab: Connections -->
+            <div id="tab-connections" class="modal-tab-content">
+                <div class="modal-body">
+                    <p class="settings-help">Para permitir que o PlaylistGen acesse o Spotify, você precisa registrar um App e informar o Client ID.</p>
+                    
+                    <div class="step-guide">
+                        <h4>Como conseguir o Client ID:</h4>
+                        <ol>
+                            <li>Acesse o <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Dashboard de Desenvolvedor do Spotify</a>.</li>
+                            <li>Crie um aplicativo (App) com qualquer nome.</li>
+                            <li>Nas configurações do App, configure o **Redirect URI** para: <br><code id="uri-display">http://localhost:3000/</code></li>
+                            <li>Copie o **Client ID** e cole abaixo.</li>
+                        </ol>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="client-id-input">Spotify Client ID</label>
+                        <input type="text" id="client-id-input" placeholder="Cole seu Client ID aqui">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+                        <label for="google-client-id-input">Google Client ID (YouTube)</label>
+                        <p class="settings-help" style="margin-bottom: 6px; font-size: 0.75rem;">Para criar playlists no YouTube, ative a <strong>YouTube Data API v3</strong> no Google Cloud Console e configure a redirect URI exatamente para o endereço atual.</p>
+                        <input type="text" id="google-client-id-input" placeholder="Cole seu Google Client ID aqui">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn-save-settings" class="btn-success">Salvar Configurações</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="btn-save-settings" class="btn-success">Salvar Configurações</button>
+
+            <!-- Tab: Showcase Management -->
+            <div id="tab-showcase" class="modal-tab-content hidden">
+                <div class="modal-body">
+                    <p class="settings-help">Gerenciamento dos links e LPs exibidos na página pública do <strong>LP da Semana</strong>. Nenhuma ação nesta área afetará as playlists na sua conta do Spotify.</p>
+                    
+                    <div class="admin-actions-modal" style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px;">
+                        <button id="btn-remove-last" class="btn-warning btn-full">
+                            <i data-lucide="trash-2" class="icon-sm"></i> Remover Última Playlist
+                        </button>
+                        <button id="btn-clear-all" class="btn-danger btn-full">
+                            <i data-lucide="alert-triangle" class="icon-sm"></i> Limpar Todas as Playlists
+                        </button>
+                        <a href="./" target="_blank" class="btn-secondary btn-full" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; padding: 10px 20px; border-radius: 500px; font-size: 0.9rem;">
+                            <i data-lucide="external-link" style="width: 16px; height: 16px;"></i> Ver Página Pública
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

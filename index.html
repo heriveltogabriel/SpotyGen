@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LP da Semana - Playlists</title>
-    <meta name="description" content="Nossas seleções musicais criadas no Spotify pelo SpotyGen.">
+    <meta name="description" content="Nossas seleções musicais criadas no Spotify pelo PlaylistGen.">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,7 @@
             <div class="logo-container">
                 <img src="logo.jpg" alt="LP da Semana Logo" class="logo-img">
             </div>
-            <p class="description-title">Do vinil para o streaming<br>Ouça no Spotify o LP da Semana</p>
+            <p class="description-title">Do vinil para o streaming<br>Ouça no seu stream preferido o LP da Semana</p>
         </header>
 
         <!-- Main Content (Playlists) -->
@@ -64,9 +64,18 @@
             const errorElement = document.getElementById('error-state');
 
             try {
-                const response = await fetch('/api/playlists');
-                if (!response.ok) {
-                    throw new Error('Falha na resposta do servidor.');
+                let response;
+                try {
+                    response = await fetch('/api/playlists');
+                    if (!response.ok) {
+                        throw new Error('Falha na resposta do servidor.');
+                    }
+                } catch (localErr) {
+                    // Fallback para desenvolvimento local caso /api/playlists falhe
+                    response = await fetch('playlists.json');
+                    if (!response.ok) {
+                        throw new Error('Falha ao carregar playlists locais.');
+                    }
                 }
                 const playlists = await response.json();
                 
@@ -78,27 +87,58 @@
                 }
 
                 playlists.forEach(pl => {
-                    const plElement = document.createElement('a');
-                    plElement.href = pl.spotifyUrl;
-                    plElement.target = '_blank';
+                    const plElement = document.createElement('div');
                     plElement.className = 'playlist-card glass-panel';
                     
                     // Fallback to placeholder if cover image doesn't load or is missing
                     const imgUrl = pl.imageUrl || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80';
                     
+                    // Contruir os links de plataformas condicionalmente
+                    let linksHtml = '';
+                    if (pl.spotifyUrl) {
+                        linksHtml += `
+                            <a href="${pl.spotifyUrl}" class="brand-btn spotify" data-tooltip="Spotify" onclick="handleUrlClick(event, '${pl.spotifyUrl}')">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.782-8.892-.98-.336.075-.668-.135-.745-.47-.077-.336.136-.668.47-.745 3.856-.88 7.15-.506 9.82 1.13.295.178.387.563.207.858zm1.225-2.72c-.226.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.076-1.185-.412.125-.845-.107-.97-.52-.125-.413.108-.846.52-.97 3.667-1.112 8.236-.574 11.34 1.34.368.225.488.706.26 1.075zm.107-2.846C14.48 8.87 8.795 8.682 5.512 9.68a1.002 1.002 0 1 1-.585-1.91c3.78-1.147 10.052-.93 13.997 1.41a1 1 0 1 1-1.018 1.722z"/></svg>
+                            </a>
+                        `;
+                    }
+                    if (pl.youtubeUrl) {
+                        linksHtml += `
+                            <a href="${pl.youtubeUrl}" class="brand-btn youtube" data-tooltip="YouTube Music" onclick="handleUrlClick(event, '${pl.youtubeUrl}')">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/1280px-Youtube_Music_icon.svg.png" alt="YouTube Music" class="brand-img-icon">
+                            </a>
+                        `;
+                    }
+                    if (pl.appleMusicUrl) {
+                        linksHtml += `
+                            <a href="${pl.appleMusicUrl}" class="brand-btn apple" data-tooltip="Apple Music" onclick="handleUrlClick(event, '${pl.appleMusicUrl}')">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVuKG6GNyWbCB2QhjJLwx2SkWrwHhkqNT7pg&s" alt="Apple Music" class="brand-img-icon">
+                            </a>
+                        `;
+                    }
+                    if (pl.deezerUrl) {
+                        linksHtml += `
+                            <a href="${pl.deezerUrl}" class="brand-btn deezer" data-tooltip="Deezer" onclick="handleUrlClick(event, '${pl.deezerUrl}')">
+                                <svg viewBox="0 0 49 48" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M41.0955 7.32313C41.5396 4.74914 42.1912 3.13054 42.913 3.12744H42.9146C44.2606 3.13208 45.3517 8.7454 45.3517 15.6759C45.3517 22.6063 44.259 28.2243 42.9115 28.2243C42.3591 28.2243 41.8494 27.2704 41.4389 25.6719C40.7903 31.5233 39.4443 35.5459 37.8862 35.5459C36.6806 35.5459 35.5986 33.1296 34.8722 29.3188C34.3762 36.5662 33.1279 41.708 31.6689 41.708C30.7533 41.708 29.9185 39.6705 29.3005 36.3529C28.5573 43.2014 26.8405 48 24.8382 48C22.836 48 21.1162 43.2029 20.376 36.3529C19.7625 39.6705 18.9278 41.708 18.0075 41.708C16.5486 41.708 15.3033 36.5662 14.8043 29.3188C14.0779 33.1296 12.999 35.5459 11.7903 35.5459C10.2337 35.5459 8.88621 31.5249 8.23763 25.6719C7.83017 27.2751 7.31741 28.2243 6.76497 28.2243C5.41745 28.2243 4.32478 22.6063 4.32478 15.6759C4.32478 8.7454 5.41745 3.12744 6.76497 3.12744C7.48833 3.12744 8.13538 4.75068 8.58405 7.32313C9.30283 2.88473 10.4703 0 11.7903 0C13.3576 0 14.7158 4.07975 15.3583 10.0038C15.987 5.69216 16.9408 2.94348 18.0091 2.94348C19.5061 2.94348 20.7789 8.34964 21.2505 15.8908C22.1371 12.0243 23.4205 9.59876 24.8413 9.59876C26.2621 9.59876 27.5455 12.0259 28.4306 15.8908C28.9037 8.34964 30.1749 2.94348 31.672 2.94348C32.7387 2.94348 33.691 5.69216 34.3228 10.0038C34.9637 4.07975 36.3219 0 37.8892 0C39.2047 0 40.3767 2.88628 41.0955 7.32313ZM0.837891 14.4417C0.837891 11.3436 1.45748 8.83142 2.22204 8.83142C2.9866 8.83142 3.60619 11.3436 3.60619 14.4417C3.60619 17.5397 2.9866 20.0519 2.22204 20.0519C1.45748 20.0519 0.837891 17.5397 0.837891 14.4417ZM46.0693 14.4417C46.0693 11.3436 46.6888 8.83142 47.4534 8.83142C48.218 8.83142 48.8376 11.3436 48.8376 14.4417C48.8376 17.5397 48.218 20.0519 47.4534 20.0519C46.6888 20.0519 46.0693 17.5397 46.0693 14.4417Z"/></svg>
+                            </a>
+                        `;
+                    }
+
                     plElement.innerHTML = `
-                        <div class="card-cover-container">
-                            <img src="${imgUrl}" alt="Capa de ${pl.name}" class="card-cover" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80'">
-                            <div class="play-overlay">
-                                <i data-lucide="play" class="play-icon"></i>
+                        <div class="card-main-content">
+                            <div class="card-cover-container">
+                                <img src="${imgUrl}" alt="Capa de ${pl.name}" class="card-cover" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80'">
+                                <div class="play-overlay">
+                                    <i data-lucide="play" class="play-icon"></i>
+                                </div>
+                            </div>
+                            <div class="card-info">
+                                <h2 class="card-title">${pl.name}</h2>
+                                <p class="card-description">${pl.description || 'Playlist gerada pelo PlaylistGen.'}</p>
                             </div>
                         </div>
-                        <div class="card-info">
-                            <h2 class="card-title">${pl.name}</h2>
-                            <p class="card-description">${pl.description || 'Playlist gerada pelo SpotyGen.'}</p>
-                        </div>
-                        <div class="card-action">
-                            <i data-lucide="chevron-right" class="arrow-icon"></i>
+                        <div class="card-links-row">
+                            ${linksHtml}
                         </div>
                     `;
                     
@@ -113,6 +153,45 @@
                 loadingElement.classList.add('hidden');
                 errorElement.classList.remove('hidden');
             }
+        }
+
+        // Função para abrir nos apps nativos no celular (Deep Linking)
+        function handleUrlClick(event, url) {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (!isMobile) return; // Se não for celular, abre em nova aba no browser normalmente
+
+            event.preventDefault();
+
+            let appUrl = url;
+            if (url.includes('spotify.com')) {
+                const match = url.match(/playlist\/([a-zA-Z0-9]+)/);
+                if (match) {
+                    appUrl = `spotify:playlist:${match[1]}`;
+                }
+            } else if (url.includes('music.youtube.com') || url.includes('youtube.com')) {
+                const match = url.match(/list=([a-zA-Z0-9_-]+)/);
+                if (match) {
+                    appUrl = `youtubemusic://playlist?list=${match[1]}`;
+                }
+            } else if (url.includes('music.apple.com')) {
+                // Tenta forçar o protocolo do app Música
+                appUrl = url.replace(/^https:/, 'music:');
+            } else if (url.includes('deezer.com')) {
+                const match = url.match(/playlist\/([0-9]+)/);
+                if (match) {
+                    appUrl = `deezer://www.deezer.com/playlist/${match[1]}`;
+                }
+            }
+
+            // Tenta abrir o App nativo redirecionando a página
+            window.location.href = appUrl;
+
+            // Se o app correspondente não abrir ou não estiver instalado, vai para a versão web depois de 1.5s
+            setTimeout(() => {
+                if (!document.hidden) {
+                    window.open(url, '_blank');
+                }
+            }, 1500);
         }
 
         document.addEventListener('DOMContentLoaded', fetchPlaylists);

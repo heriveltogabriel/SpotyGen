@@ -369,7 +369,7 @@ button {
     color: var(--text-secondary);
 }
 
-input[type="text"], textarea {
+input[type="text"], input[type="url"], textarea {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -382,9 +382,30 @@ input[type="text"], textarea {
     width: 100%;
 }
 
-input[type="text"]:focus, textarea:focus {
+input[type="text"]:focus, input[type="url"]:focus, textarea:focus {
     border-color: var(--spotify-green);
     box-shadow: 0 0 10px rgba(29, 185, 84, 0.2);
+}
+
+/* Generic Input with Icon Container */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-with-icon .input-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    width: 18px;
+    height: 18px;
+}
+
+.input-with-icon input {
+    padding-left: 2.75rem !important;
 }
 
 input:disabled, textarea:disabled {
@@ -712,14 +733,55 @@ input:disabled, textarea:disabled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.25rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
 }
 
 .modal-header h2 {
     font-family: var(--font-heading);
     font-size: 1.25rem;
+}
+
+/* Modal Tabs */
+.modal-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.modal-tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.5rem 0.25rem 0.75rem 0.25rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    border-bottom: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.modal-tab-btn.active {
+    color: var(--spotify-green);
+    border-bottom-color: var(--spotify-green);
+}
+
+.modal-tab-content.hidden {
+    display: none !important;
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+    display: flex;
 }
 
 .settings-help {

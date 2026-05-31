@@ -9,6 +9,8 @@ const state = {
     expiresAt: parseInt(localStorage.getItem('spotify_expires_at') || '0'),
     user: null,
     clientId: localStorage.getItem('spotify_client_id') || CONFIG.CLIENT_ID || '',
+    googleAccessToken: localStorage.getItem('google_access_token') || null,
+    googleClientId: localStorage.getItem('google_client_id') || CONFIG.GOOGLE_CLIENT_ID || '',
     searchType: 'artist-top', // artist-top, album, artist-mix
     searchResults: [],
     selectedItem: null,
@@ -30,6 +32,7 @@ const DOM = {
     btnCloseModal: document.getElementById('btn-close-modal'),
     btnSaveSettings: document.getElementById('btn-save-settings'),
     clientIdInput: document.getElementById('client-id-input'),
+    googleClientIdInput: document.getElementById('google-client-id-input'),
     uriDisplay: document.getElementById('uri-display'),
     searchInput: document.getElementById('search-input'),
     searchResultsContainer: document.getElementById('search-results-container'),
@@ -45,10 +48,17 @@ const DOM = {
     playlistMetaSettings: document.getElementById('playlist-meta-settings'),
     playlistTitle: document.getElementById('playlist-title'),
     playlistDesc: document.getElementById('playlist-desc'),
+    playlistYoutubeUrl: document.getElementById('playlist-youtube-url'),
+    playlistAppleUrl: document.getElementById('playlist-apple-url'),
+    playlistDeezerUrl: document.getElementById('playlist-deezer-url'),
     btnGeneratePlaylist: document.getElementById('btn-generate-playlist'),
     btnRemoveLast: document.getElementById('btn-remove-last'),
     btnClearAll: document.getElementById('btn-clear-all'),
-    toastContainer: document.getElementById('toast-container')
+    toastContainer: document.getElementById('toast-container'),
+    btnLoginYoutube: document.getElementById('btn-login-youtube'),
+    btnLogoutYoutube: document.getElementById('btn-logout-youtube'),
+    youtubeProfile: document.getElementById('youtube-profile'),
+    youtubeUserName: document.getElementById('youtube-user-name')
 };
 
 // -------------------------------------------------------------
@@ -133,6 +143,38 @@ async function redirectToSpotifyAuth() {
     window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
+// Redirecionamento Google OAuth 2.0 (Implicit Flow)
+function redirectToGoogleAuth() {
+    if (!state.googleClientId) {
+        showToast('Configure seu Google Client ID nas configurações antes de conectar.', 'error');
+        openSettingsModal();
+        return;
+    }
+    
+    const redirectUri = CONFIG.REDIRECT_URI;
+    const params = new URLSearchParams({
+        client_id: state.googleClientId,
+        redirect_uri: redirectUri,
+        response_type: 'token',
+        scope: CONFIG.GOOGLE_SCOPES,
+        prompt: 'select_account'
+    });
+    
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+}
+
+function logoutGoogle() {
+    state.googleAccessToken = null;
+    localStorage.removeItem('google_access_token');
+    
+    DOM.youtubeProfile.classList.add('hidden');
+    DOM.btnLoginYoutube.classList.remove('hidden');
+    DOM.playlistYoutubeUrl.disabled = false;
+    DOM.playlistYoutubeUrl.value = "";
+    DOM.playlistYoutubeUrl.placeholder = "https://music.youtube.com/playlist?list=...";
+    showToast('YouTube desconectado.', 'success');
+}
+
 async function fetchToken(body) {
     const response = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
@@ -194,6 +236,19 @@ async function getValidToken() {
 async function handleCallback() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    
+    // Processar callback do Google OAuth (Implicit Flow) no hash
+    if (window.location.hash) {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const googleToken = hashParams.get('access_token');
+        if (googleToken) {
+            state.googleAccessToken = googleToken;
+            localStorage.setItem('google_access_token', googleToken);
+            // Limpar hash imediatamente
+            window.history.replaceState({}, document.title, window.location.pathname);
+            showToast('Conectado ao YouTube com sucesso!', 'success');
+        }
+    }
     
     if (code) {
         const codeVerifier = window.localStorage.getItem('spotify_code_verifier');
@@ -515,7 +570,7 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
     DOM.btnGeneratePlaylist.innerHTML = '<i class="spinner"></i> Criando...';
 
     try {
-        const title = DOM.playlistTitle.value.trim() || 'Minha Playlist SpotyGen';
+        const title = DOM.playlistTitle.value.trim() || 'Minha Playlist PlaylistGen';
         const description = DOM.playlistDesc.value.trim();
 
         // 1. Criar Playlist Vazia
@@ -559,7 +614,7 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
                 throw new Error(`Etapa 2 (Adicionar Músicas) falhou: ${err2.message}`);
             }
 
-            // Registrar no backend público do SpotyGen
+            // Registrar no backend público do PlaylistGen
             try {
                 let imageUrl = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80';
                 if (state.selectedItem && state.selectedItem.images && state.selectedItem.images.length > 0) {
@@ -568,6 +623,40 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
                     imageUrl = state.currentTracks[0].album.images[0].url;
                 }
 
+                // Automação YouTube Music
+                let ytUrl = DOM.playlistYoutubeUrl.value.trim();
+                if (state.googleAccessToken) {
+                    try {
+                        DOM.btnGeneratePlaylist.disabled = true;
+                        DOM.btnGeneratePlaylist.innerHTML = '<i class="spinner"></i> Criando no YouTube...';
+                        console.log('Pesquisando faixas no YouTube...');
+                        const videoIds = [];
+                        for (const track of state.currentTracks) {
+                            try {
+                                const videoId = await searchYouTubeTrack(track.name, track.artists[0].name);
+                                videoIds.push(videoId);
+                            } catch (e) {
+                                console.warn(`Falha ao buscar faixa "${track.name}" no YouTube:`, e);
+                            }
+                        }
+                        
+                        console.log('Criando playlist no YouTube...');
+                        const ytPlaylistId = await createYouTubePlaylist(title, description);
+                        
+                        console.log('Adicionando vídeos à playlist do YouTube...');
+                        await addVideosToYouTubePlaylist(ytPlaylistId, videoIds);
+                        
+                        ytUrl = `https://music.youtube.com/playlist?list=${ytPlaylistId}`;
+                        console.log('Playlist gerada com sucesso no YouTube:', ytUrl);
+                    } catch (ytError) {
+                        console.error('Erro na automação do YouTube:', ytError);
+                        showToast(`Criada no Spotify, mas falhou ao gerar no YouTube: ${ytError.message}`, 'warning');
+                    }
+                }
+
+                const appleUrl = DOM.playlistAppleUrl.value.trim();
+                const deezerUrl = DOM.playlistDeezerUrl.value.trim();
+
                 await fetch('/api/playlists', {
                     method: 'POST',
                     headers: {
@@ -575,9 +664,12 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
                     },
                     body: JSON.stringify({
                         name: title,
-                        description: description || `Playlist criada por SpotyGen`,
+                        description: description || `Playlist criada por PlaylistGen`,
                         spotifyUrl: playlist.external_urls.spotify,
-                        imageUrl: imageUrl
+                        imageUrl: imageUrl,
+                        youtubeUrl: ytUrl || "",
+                        appleMusicUrl: appleUrl || "",
+                        deezerUrl: deezerUrl || ""
                     })
                 });
                 console.log('Playlist cadastrada no backend com sucesso!');
@@ -585,13 +677,18 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
                 console.error('Erro ao cadastrar playlist no backend:', errBackend);
             }
 
-            showToast(`Playlist "${title}" criada com sucesso no seu Spotify!`, 'success');
+            showToast(`Playlist "${title}" criada e publicada com sucesso!`, 'success');
             
             // Resetar formulário
             DOM.playlistMetaSettings.classList.add('hidden');
             DOM.previewContent.classList.add('hidden');
             DOM.previewPlaceholder.classList.remove('hidden');
             DOM.searchInput.value = '';
+            DOM.playlistTitle.value = '';
+            DOM.playlistDesc.value = '';
+            DOM.playlistYoutubeUrl.value = '';
+            DOM.playlistAppleUrl.value = '';
+            DOM.playlistDeezerUrl.value = '';
             state.selectedItem = null;
             state.currentTracks = [];
         }
@@ -600,7 +697,7 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
         showToast(`Erro ao criar playlist: ${e.message}`, 'error');
     } finally {
         DOM.btnGeneratePlaylist.disabled = false;
-        DOM.btnGeneratePlaylist.innerHTML = '<i data-lucide="plus-circle"></i> Criar no Spotify';
+        DOM.btnGeneratePlaylist.innerHTML = '<i data-lucide="plus-circle"></i> Criar & Publicar LP';
         lucide.createIcons();
     }
 });
@@ -672,21 +769,56 @@ DOM.btnCloseModal.addEventListener('click', closeSettingsModal);
 
 function openSettingsModal() {
     DOM.clientIdInput.value = state.clientId;
+    DOM.googleClientIdInput.value = state.googleClientId || '';
     DOM.settingsModal.classList.remove('hidden');
+    
+    // Resetar abas para a padrão (connections)
+    const modalTabBtns = document.querySelectorAll('.modal-tab-btn');
+    const modalTabContents = document.querySelectorAll('.modal-tab-content');
+    modalTabBtns.forEach(b => b.classList.remove('active'));
+    modalTabContents.forEach(c => c.classList.add('hidden'));
+    
+    const defaultTabBtn = document.querySelector('.modal-tab-btn[data-tab="connections"]');
+    const defaultTabContent = document.getElementById('tab-connections');
+    if (defaultTabBtn) defaultTabBtn.classList.add('active');
+    if (defaultTabContent) defaultTabContent.classList.remove('hidden');
 }
 
 function closeSettingsModal() {
     DOM.settingsModal.classList.add('hidden');
 }
 
+// Configurar navegação por abas no modal
+document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        
+        // Alternar classe ativa nos botões das abas
+        document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Alternar visibilidade do conteúdo das abas
+        document.querySelectorAll('.modal-tab-content').forEach(content => {
+            if (content.id === `tab-${targetTab}`) {
+                content.classList.remove('hidden');
+            } else {
+                content.classList.add('hidden');
+            }
+        });
+    });
+});
+
 DOM.btnSaveSettings.addEventListener('click', () => {
     const id = DOM.clientIdInput.value.trim();
+    const googleId = DOM.googleClientIdInput.value.trim();
     if (!id) {
-        showToast('Client ID não pode ser vazio', 'error');
+        showToast('Spotify Client ID não pode ser vazio', 'error');
         return;
     }
     state.clientId = id;
+    state.googleClientId = googleId;
     localStorage.setItem('spotify_client_id', id);
+    localStorage.setItem('google_client_id', googleId);
     closeSettingsModal();
     checkSetupBanner();
     showToast('Configurações salvas!', 'success');
@@ -773,7 +905,99 @@ async function initApp() {
     if (state.accessToken) {
         await fetchUserProfile();
     }
+
+    // Verificar se o YouTube está autenticado
+    if (state.googleAccessToken) {
+        DOM.youtubeProfile.classList.remove('hidden');
+        DOM.btnLoginYoutube.classList.add('hidden');
+        DOM.playlistYoutubeUrl.disabled = true;
+        DOM.playlistYoutubeUrl.value = "";
+        DOM.playlistYoutubeUrl.placeholder = "Link gerado automaticamente via YouTube API";
+    } else {
+        DOM.youtubeProfile.classList.add('hidden');
+        DOM.btnLoginYoutube.classList.remove('hidden');
+        DOM.playlistYoutubeUrl.disabled = false;
+        DOM.playlistYoutubeUrl.placeholder = "https://music.youtube.com/playlist?list=...";
+    }
+}
+
+// Google Auth Buttons click listeners
+if (DOM.btnLoginYoutube) {
+    DOM.btnLoginYoutube.addEventListener('click', redirectToGoogleAuth);
+}
+if (DOM.btnLogoutYoutube) {
+    DOM.btnLogoutYoutube.addEventListener('click', logoutGoogle);
 }
 
 // Inicializar aplicativo
 initApp();
+
+// -------------------------------------------------------------
+// YOUTUBE DATA API V3 HELPERS
+// -------------------------------------------------------------
+async function searchYouTubeTrack(trackName, artistName) {
+    const query = `${trackName} ${artistName} topic`;
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=1`, {
+        headers: {
+            'Authorization': `Bearer ${state.googleAccessToken}`
+        }
+    });
+    if (!response.ok) {
+        throw new Error('Erro ao pesquisar música no YouTube');
+    }
+    const data = await response.json();
+    if (data.items && data.items.length > 0) {
+        return data.items[0].id.videoId;
+    }
+    return null;
+}
+
+async function createYouTubePlaylist(title, description) {
+    const response = await fetch('https://www.googleapis.com/youtube/v3/playlists?part=snippet,status', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${state.googleAccessToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            snippet: {
+                title: title,
+                description: description || 'Playlist criada por PlaylistGen'
+            },
+            status: {
+                privacyStatus: 'public'
+            }
+        })
+    });
+    if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error?.message || 'Erro ao criar playlist no YouTube');
+    }
+    const data = await response.json();
+    return data.id;
+}
+
+async function addVideosToYouTubePlaylist(playlistId, videoIds) {
+    for (const videoId of videoIds) {
+        if (!videoId) continue;
+        await fetch('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${state.googleAccessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                snippet: {
+                    playlistId: playlistId,
+                    resourceId: {
+                        kind: 'youtube#video',
+                        videoId: videoId
+                    }
+                }
+            })
+        });
+        // Atraso sutil para evitar limites de taxa
+        await new Promise(r => setTimeout(r, 150));
+    }
+}
+

@@ -133,13 +133,21 @@ body::after {
 
 .playlist-card {
     display: flex;
-    align-items: center;
-    padding: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    gap: 16px;
     text-decoration: none;
     color: var(--text-primary);
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
+}
+
+.card-main-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 .playlist-card:hover {
@@ -228,25 +236,139 @@ body::after {
     font-weight: 300;
 }
 
-/* Action button icon */
-.card-action {
+/* Multi-platform Links Row */
+.card-links-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 4px;
+    gap: 12px;
+    padding: 12px 4px 4px 4px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
 }
 
-.arrow-icon {
-    color: var(--text-muted);
-    width: 20px;
-    height: 20px;
+.brand-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    position: relative;
+}
+
+/* Custom Tooltip on Hover */
+.brand-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    background: #09090b;
+    color: var(--text-primary);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+}
+
+.brand-btn::before {
+    content: '';
+    position: absolute;
+    bottom: 105%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: #09090b transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+.brand-btn:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    bottom: 135%;
+}
+
+.brand-btn:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    bottom: 122%;
+}
+
+.brand-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
     transition: var(--transition-smooth);
 }
 
-.playlist-card:hover .arrow-icon {
-    color: var(--spotify-green);
-    transform: translateX(3px);
+.brand-img-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: var(--transition-smooth);
 }
+
+
+/* Individual Brand Styling on Hover */
+.brand-btn.spotify:hover {
+    background: #1db954;
+    border-color: #1ed760;
+    color: #000000;
+    box-shadow: 0 0 14px rgba(29, 185, 84, 0.6);
+    transform: translateY(-2px) scale(1.08);
+}
+
+.brand-btn.youtube:hover {
+    background: #ff0000;
+    border-color: #ff3333;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(255, 0, 0, 0.6);
+    transform: translateY(-2px) scale(1.08);
+}
+
+.brand-btn.apple:hover {
+    background: linear-gradient(135deg, #fc3c44, #fa243c);
+    border-color: #ff4f5e;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(250, 36, 60, 0.6);
+    transform: translateY(-2px) scale(1.08);
+}
+
+/* Deezer Default State override */
+.brand-btn.deezer {
+    background: #000000;
+    border-color: rgba(162, 56, 255, 0.3);
+    color: #a238ff;
+}
+
+.brand-btn.deezer:hover {
+    background: #a238ff;
+    border-color: #b566ff;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(162, 56, 255, 0.6);
+    transform: translateY(-2px) scale(1.08);
+}
+
+
 
 /* States */
 .loading-state, .empty-state, .error-state {

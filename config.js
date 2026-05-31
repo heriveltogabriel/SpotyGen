@@ -8,5 +8,7 @@ const CONFIG = {
         'playlist-modify-private',
         'user-read-private',
         'user-read-email'
-    ].join(' ')
+    ].join(' '),
+    GOOGLE_CLIENT_ID: '',
+    GOOGLE_SCOPES: 'https://www.googleapis.com/auth/youtube.force-ssl'
 };

@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <!-- Style sheet -->
-    <link rel="stylesheet" href="lps.css?v=1.1">
+    <link rel="stylesheet" href="lps.css?v=1.3">
 </head>
 <body>
     <div class="container">
@@ -105,14 +105,14 @@
                     if (pl.youtubeUrl) {
                         linksHtml += `
                             <a href="${pl.youtubeUrl}" class="brand-btn youtube" data-tooltip="YouTube Music" onclick="handleUrlClick(event, '${pl.youtubeUrl}')">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/1280px-Youtube_Music_icon.svg.png" alt="YouTube Music" class="brand-img-icon">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/1280px-Youtube_Music_icon.svg.png" alt="YouTube Music" class="brand-img-icon" width="22" height="22">
                             </a>
                         `;
                     }
                     if (pl.appleMusicUrl) {
                         linksHtml += `
                             <a href="${pl.appleMusicUrl}" class="brand-btn apple" data-tooltip="Apple Music" onclick="handleUrlClick(event, '${pl.appleMusicUrl}')">
-                                <img src="https://static.vecteezy.com/system/resources/previews/073/495/331/non_2x/apple-music-logo-rounded-glossy-icon-with-transparent-background-free-png.png" alt="Apple Music" class="brand-img-icon">
+                                <img src="https://static.vecteezy.com/system/resources/previews/073/495/331/non_2x/apple-music-logo-rounded-glossy-icon-with-transparent-background-free-png.png" alt="Apple Music" class="brand-img-icon" width="22" height="22">
                             </a>
                         `;
                     }
@@ -126,7 +126,7 @@
                     if (pl.amazonMusicUrl) {
                         linksHtml += `
                             <a href="${pl.amazonMusicUrl}" class="brand-btn amazon" data-tooltip="Amazon Music" onclick="handleUrlClick(event, '${pl.amazonMusicUrl}')">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Stacked_Amazon_Music_CharcoalOnCyan_Circle_RGB.png" alt="Amazon Music" class="brand-img-icon">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Stacked_Amazon_Music_CharcoalOnCyan_Circle_RGB.png" alt="Amazon Music" class="brand-img-icon" width="22" height="22">
                             </a>
                         `;
                     }

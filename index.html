@@ -24,7 +24,7 @@
             <div class="logo-container">
                 <img src="logo.jpg" alt="LP da Semana Logo" class="logo-img">
             </div>
-            <p class="description-title">Do vinil para o streaming<br>Ouça no seu stream preferido o LP da Semana</p>
+            <p class="description-title">Do vinil para o streaming<br>Ouça o LP da Semana no seu streaming.</p>
         </header>
 
         <!-- Main Content (Playlists) -->
@@ -112,7 +112,7 @@
                     if (pl.appleMusicUrl) {
                         linksHtml += `
                             <a href="${pl.appleMusicUrl}" class="brand-btn apple" data-tooltip="Apple Music" onclick="handleUrlClick(event, '${pl.appleMusicUrl}')">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVuKG6GNyWbCB2QhjJLwx2SkWrwHhkqNT7pg&s" alt="Apple Music" class="brand-img-icon">
+                                <img src="https://static.vecteezy.com/system/resources/previews/073/495/331/non_2x/apple-music-logo-rounded-glossy-icon-with-transparent-background-free-png.png" alt="Apple Music" class="brand-img-icon">
                             </a>
                         `;
                     }
@@ -123,17 +123,27 @@
                             </a>
                         `;
                     }
+                    if (pl.amazonMusicUrl) {
+                        linksHtml += `
+                            <a href="${pl.amazonMusicUrl}" class="brand-btn amazon" data-tooltip="Amazon Music" onclick="handleUrlClick(event, '${pl.amazonMusicUrl}')">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Stacked_Amazon_Music_CharcoalOnCyan_Circle_RGB.png" alt="Amazon Music" class="brand-img-icon">
+                            </a>
+                        `;
+                    }
+
+
+                    const nameParts = pl.name.split(' - ');
+                    const artistName = nameParts[0] || '';
+                    const albumName = nameParts.slice(1).join(' - ') || '';
 
                     plElement.innerHTML = `
                         <div class="card-main-content">
                             <div class="card-cover-container">
                                 <img src="${imgUrl}" alt="Capa de ${pl.name}" class="card-cover" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80'">
-                                <div class="play-overlay">
-                                    <i data-lucide="play" class="play-icon"></i>
-                                </div>
                             </div>
                             <div class="card-info">
-                                <h2 class="card-title">${pl.name}</h2>
+                                <h2 class="card-artist">${artistName}</h2>
+                                <div class="card-album">${albumName}</div>
                                 <p class="card-description">${pl.description || 'Playlist gerada pelo PlaylistGen.'}</p>
                             </div>
                         </div>
@@ -181,6 +191,8 @@
                 if (match) {
                     appUrl = `deezer://www.deezer.com/playlist/${match[1]}`;
                 }
+            } else if (url.includes('music.amazon.com') || url.includes('amazon.com')) {
+                appUrl = url.replace(/^https:/, 'amazonmusic:');
             }
 
             // Tenta abrir o App nativo redirecionando a página

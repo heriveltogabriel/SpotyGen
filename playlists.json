@@ -5,7 +5,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/7H5gRqqr2TgFEAnDpQoeFR",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b27353f941c094e3f95ff33034da",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLKQ8eg7hWPu8SbjNMO5OuMXjlo-rd7RTz",
-    "appleMusicUrl": "https://music.apple.com/us/album/elvis-30-1-hits-expanded-edition/1609685063"
+    "appleMusicUrl": "https://music.apple.com/us/album/elvis-30-1-hits-expanded-edition/1609685063",
+    "deezerUrl": "https://www.deezer.com/album/295039102",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B09SBVF9V8",
+    "tidalUrl": "https://listen.tidal.com/album/216389063"
   },
   {
     "name": "Gal Costa - Gal Estratosférica",
@@ -13,7 +16,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/2H5X3MMEmlF5cnl3rGRgCB",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b2731287784d133815e5d4e8ad0a",
     "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_n5CO09V_qaGeZwONIoHgyKophDpCNUasI&si=Ko36waTCQF6sueHB",
-    "appleMusicUrl": "https://music.apple.com/us/album/gal-estratosf%C3%A9rica/1075298510"
+    "appleMusicUrl": "https://music.apple.com/us/album/gal-estratosf%C3%A9rica/1075298510",
+    "deezerUrl": "https://www.deezer.com/album/12181334",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B01AZGE0AO",
+    "tidalUrl": "https://listen.tidal.com/album/56289559"
   },
   {
     "name": "Jack Johnson - In Between Dreams",
@@ -21,7 +27,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/4Ar7KPb6bAUaEEisZ0SfAr",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273628dba01c669d89586967dc5",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLH2nYalExXL0GFXWfk0iCCcjrpHLI4Wnh",
-    "appleMusicUrl": "https://music.apple.com/us/album/in-between-dreams-bonus-track-version/1440857781"
+    "appleMusicUrl": "https://music.apple.com/us/album/in-between-dreams-bonus-track-version/1440857781",
+    "deezerUrl": "https://www.deezer.com/album/231074",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B0F8D218HZ",
+    "tidalUrl": "https://listen.tidal.com/album/4048113"
   },
   {
     "name": "Alcione - A Paixão Tem Memória",
@@ -29,7 +38,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/7jEeWvQV0dCf1PXF87j0CL",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b2738ab02a5b19afe9b2e30c7aac",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLeCY2wM0mBrTNYvG2y0kgMse9PpzbHN4M",
-    "appleMusicUrl": "https://music.apple.com/us/album/a-paix%C3%A3o-tem-mem%C3%B3ria/1443778359"
+    "appleMusicUrl": "https://music.apple.com/us/album/a-paix%C3%A3o-tem-mem%C3%B3ria/1443778359",
+    "deezerUrl": "https://www.deezer.com/album/430018",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B000XXX8K8",
+    "tidalUrl": "https://listen.tidal.com/album/4035876"
   },
   {
     "name": "The Dave Brubeck Quartet - Time Out",
@@ -37,7 +49,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/5BCAgXHNgLUdZsC1P9Whuc",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273b6bd44cf06bf8f4d5ce1e080",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLMxkpnetcodMI06cGhDnJWIu86POfn-JJ",
-    "appleMusicUrl": "https://music.apple.com/us/album/time-out/193085545"
+    "appleMusicUrl": "https://music.apple.com/us/album/time-out/193085545",
+    "deezerUrl": "https://www.deezer.com/album/6774073",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B001IJUGEM"
   },
   {
     "name": "Os Paralamas Do Sucesso - Selvagem?",
@@ -45,7 +59,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/0rSVRBAftvfqiePfQa3hz5",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273972c600717749186a51ecc30",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLiaAut-7Gn2SKiMmSm5j4QrTM33FX2xK7",
-    "appleMusicUrl": "https://music.apple.com/us/album/selvagem-remastered/1442811003"
+    "appleMusicUrl": "https://music.apple.com/us/album/selvagem-remastered/1442811003",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B076MFLVL5",
+    "tidalUrl": "https://listen.tidal.com/album/80263880"
   },
   {
     "name": "Rush - Moving Pictures",
@@ -53,7 +69,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/7zIPi5u5xI8fNZ7ID9b47w",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b27372833c1ae3343cbfb4617073",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLrnz4iRZQNleiuzqn3P_t6h6RkNHxZPtF",
-    "appleMusicUrl": "https://music.apple.com/us/album/moving-pictures-remastered/1440798539"
+    "appleMusicUrl": "https://music.apple.com/us/album/moving-pictures-remastered/1440798539",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B07VR22CKX",
+    "tidalUrl": "https://listen.tidal.com/album/77623600"
   },
   {
     "name": "Marina Lima - O Chamado",
@@ -61,7 +79,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/5Yr8IElSKZZoplSDjwvkzC",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b27343acbb147eeb0bffd48ab205",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLX880GUMZGODp3385hSEGzm6rU1STnrA2",
-    "appleMusicUrl": "https://music.apple.com/us/album/o-chamado/1566439849"
+    "appleMusicUrl": "https://music.apple.com/us/album/o-chamado/1566439849",
+    "deezerUrl": "https://www.deezer.com/album/228492702",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B094BYRJQL",
+    "tidalUrl": "https://listen.tidal.com/album/183308270"
   },
   {
     "name": "Gilberto Gil - Unplugged",
@@ -69,7 +90,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/720VA5hqp34hNoaAr8ag3H",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273ad1ae8d7bd1fafd150b5fca9",
     "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_lLhfTPb2b1mmADREH2SWiYx0IZ7y-Im4Q&si=wsr29k-Svfrgd_5t",
-    "appleMusicUrl": "https://music.apple.com/us/album/unplugged-ao-vivo/1754250878"
+    "appleMusicUrl": "https://music.apple.com/us/album/unplugged-ao-vivo/1754250878",
+    "deezerUrl": "https://www.deezer.com/album/607418002",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B0D85L7GYM",
+    "tidalUrl": "https://listen.tidal.com/album/371765008"
   },
   {
     "name": "Paul McCartney - Man on the Run",
@@ -77,7 +101,8 @@
     "spotifyUrl": "https://open.spotify.com/playlist/4c0mZFgyibdsLlFHKR7G3N",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273cdf0c4ee39c76e4961424eab",
     "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_k3xPP8z3_mrGU6FapFS8sJE4pHJgOoYLA&si=tMzDNkDIH4gHEOsk",
-    "appleMusicUrl": "https://music.apple.com/us/album/man-on-the-run-music-from-the-motion-picture-soundtrack/1874078813"
+    "appleMusicUrl": "https://music.apple.com/us/album/man-on-the-run-music-from-the-motion-picture-soundtrack/1874078813",
+    "tidalUrl": "https://listen.tidal.com/album/500582614"
   },
   {
     "name": "Marisa Monte - Verde Anil Amarelo Cor de Rosa e Carvão",
@@ -85,7 +110,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/0fDdw729Qm7BaFC0vFRyH6",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b2731c938a5517ad9687308180e2",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLrt7VbxNS8rdqE1XKJVcMPr2yLiEp7zmz",
-    "appleMusicUrl": "https://music.apple.com/us/album/verde-anil-amarelo-cor-de-rosa-e-carv%C3%A3o/1512222152"
+    "appleMusicUrl": "https://music.apple.com/us/album/verde-anil-amarelo-cor-de-rosa-e-carv%C3%A3o/1512222152",
+    "deezerUrl": "https://www.deezer.com/album/146933722",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B0889FQGHD",
+    "tidalUrl": "https://listen.tidal.com/album/140547512"
   },
   {
     "name": "AC/DC - Back In Black",
@@ -93,7 +121,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/7j6IerhiOIYJtIl63NAabN",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273ff191d7fbdb5a13eaf84132b",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLzqsoINOR51ZNYuuINo2XVKJu9PQtAcdK",
-    "appleMusicUrl": "https://music.apple.com/us/album/back-in-black/574050396"
+    "appleMusicUrl": "https://music.apple.com/us/album/back-in-black/574050396",
+    "deezerUrl": "https://www.deezer.com/album/9410100",
+    "tidalUrl": "https://listen.tidal.com/album/35986104"
   },
   {
     "name": "Barão Vermelho - Edição Especial 30 Anos",
@@ -101,7 +131,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/1WwYImXRveSCQsrvv2oFMH",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b27398dadd69ad6965ae81e2f661",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLDiJGlu688w5vS6HgGp9utXg4O840AZl5",
-    "appleMusicUrl": "https://music.apple.com/us/album/bar%C3%A3o-vermelho-edi%C3%A7%C3%A3o-especial-30-anos/582268656"
+    "appleMusicUrl": "https://music.apple.com/us/album/bar%C3%A3o-vermelho-edi%C3%A7%C3%A3o-especial-30-anos/582268656",
+    "deezerUrl": "https://www.deezer.com/album/6148140",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B00AFPP5EG",
+    "tidalUrl": "https://listen.tidal.com/album/18192490"
   },
   {
     "name": "Amy Winehouse - Back To Black",
@@ -109,7 +142,10 @@
     "spotifyUrl": "https://open.spotify.com/playlist/2bJ1EsV4hG1wULbRX0WIJl",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273dc65d5638a3de4a0bdf3c05f",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLDCdjwiC90TGLe5any6XHKHogPqdfb_yP",
-    "appleMusicUrl": "https://music.apple.com/us/album/back-to-black/1440856219"
+    "appleMusicUrl": "https://music.apple.com/us/album/back-to-black/1440856219",
+    "deezerUrl": "https://www.deezer.com/album/10650156",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B073JRH789",
+    "tidalUrl": "https://listen.tidal.com/album/47078183"
   },
   {
     "name": "Engenheiros Do Hawaii - Acústico MTV",
@@ -117,7 +153,8 @@
     "spotifyUrl": "https://open.spotify.com/playlist/3frC98pJRPVm2v1yZWm8HD",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273f98de08cd017b515c9e61344",
     "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_m06CRLOK2cAR-K_8yAtaVCdCAEmQ6sjhU&si=OTF-L5HvcyJA_Agz",
-    "appleMusicUrl": "https://music.apple.com/us/album/ac%C3%BAstico-ao-vivo-deluxe/1464080138"
+    "appleMusicUrl": "https://music.apple.com/us/album/ac%C3%BAstico-ao-vivo-deluxe/1464080138",
+    "tidalUrl": "https://listen.tidal.com/album/110161066"
   },
   {
     "name": "The Beatles - Abbey Road (Remastered)",
@@ -125,7 +162,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/2nf1qkzZpurGQjFHP2w9yw",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLeV1mJs_wDvpMWeVZqT624Z1_2Sg-pp0w",
-    "appleMusicUrl": "https://music.apple.com/us/album/abbey-road-remastered/1441164426"
+    "appleMusicUrl": "https://music.apple.com/us/album/abbey-road-remastered/1441164426",
+    "deezerUrl": "https://www.deezer.com/album/632420",
+    "tidalUrl": "https://listen.tidal.com/album/8755039"
   },
   {
     "name": "Plebe Rude - O Concreto Já Rachou",

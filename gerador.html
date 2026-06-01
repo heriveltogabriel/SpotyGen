@@ -45,18 +45,6 @@
                 <button id="btn-login" class="btn-primary">
                     <i data-lucide="log-in"></i> Conectar Spotify
                 </button>
-
-                <!-- YouTube profile & login -->
-                <div id="youtube-profile" class="user-profile hidden" style="border-color: rgba(255, 0, 0, 0.2);">
-                    <i data-lucide="play" style="color: #ff0000; width: 16px; height: 16px; fill: #ff0000;"></i>
-                    <div class="user-info-text" style="display: flex; flex-direction: column; line-height: 1.2;">
-                        <span id="youtube-user-name" style="font-weight: 600; font-size: 0.85rem;">YouTube Ativo</span>
-                    </div>
-                    <button id="btn-logout-youtube" class="btn-secondary btn-sm">Sair</button>
-                </div>
-                <button id="btn-login-youtube" class="btn-primary" style="background-color: #ff0000; border-color: #ff0000; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25);">
-                    <i data-lucide="play"></i> Conectar YouTube
-                </button>
             </div>
         </header>
 
@@ -123,30 +111,7 @@
                             <textarea id="playlist-desc" rows="2" placeholder="Playlist criada automaticamente pelo PlaylistGen."></textarea>
                         </div>
                         
-                        <!-- Multi-platform Optional Links -->
-                        <div class="form-group">
-                            <label for="playlist-youtube-url">Link do YouTube Music (Opcional)</label>
-                            <div class="input-with-icon">
-                                <i data-lucide="play-circle" class="input-icon"></i>
-                                <input type="url" id="playlist-youtube-url" placeholder="https://music.youtube.com/playlist?list=...">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="playlist-apple-url">Link do Apple Music (Opcional)</label>
-                            <div class="input-with-icon">
-                                <i data-lucide="music-2" class="input-icon"></i>
-                                <input type="url" id="playlist-apple-url" placeholder="https://music.apple.com/us/playlist/...">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="playlist-deezer-url">Link do Deezer (Opcional)</label>
-                            <div class="input-with-icon">
-                                <i data-lucide="heart" class="input-icon"></i>
-                                <input type="url" id="playlist-deezer-url" placeholder="https://www.deezer.com/playlist/...">
-                            </div>
-                        </div>
+                        <!-- Links are now retrieved automatically via Odesli API -->
 
                         <button id="btn-generate-playlist" class="btn-success btn-full">
                             <i data-lucide="plus-circle"></i> Criar & Publicar LP
@@ -234,12 +199,6 @@
                     <div class="form-group">
                         <label for="client-id-input">Spotify Client ID</label>
                         <input type="text" id="client-id-input" placeholder="Cole seu Client ID aqui">
-                    </div>
-
-                    <div class="form-group" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
-                        <label for="google-client-id-input">Google Client ID (YouTube)</label>
-                        <p class="settings-help" style="margin-bottom: 6px; font-size: 0.75rem;">Para criar playlists no YouTube, ative a <strong>YouTube Data API v3</strong> no Google Cloud Console e configure a redirect URI exatamente para o endereço atual.</p>
-                        <input type="text" id="google-client-id-input" placeholder="Cole seu Google Client ID aqui">
                     </div>
                 </div>
                 <div class="modal-footer">

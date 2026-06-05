@@ -4,11 +4,13 @@ import sys
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 FILE_PATH = '/usr/share/nginx/html/playlists.json'
+COUNTER_PATH = '/usr/share/nginx/html/counter.txt'
 DEFAULT_PORT = 5000
 
 # Se o diretório do Nginx não existe (rodando localmente), ajusta caminhos e porta padrão
 if not os.path.exists(os.path.dirname(FILE_PATH)):
     FILE_PATH = 'playlists.json'
+    COUNTER_PATH = 'counter.txt'
     DEFAULT_PORT = 3000
 
 class PlaylistHandler(SimpleHTTPRequestHandler):
@@ -30,6 +32,31 @@ class PlaylistHandler(SimpleHTTPRequestHandler):
                     self.wfile.write(f.read().encode('utf-8'))
             else:
                 self.wfile.write(b'[]')
+        elif self.path == '/api/access-count':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            
+            count = 0
+            if os.path.exists(COUNTER_PATH):
+                try:
+                    with open(COUNTER_PATH, 'r', encoding='utf-8') as f:
+                        count = int(f.read().strip())
+                except Exception:
+                    pass
+            count += 1
+            try:
+                with open(COUNTER_PATH, 'w', encoding='utf-8') as f:
+                    f.write(str(count))
+                try:
+                    os.chmod(COUNTER_PATH, 0o664)
+                except Exception:
+                    pass
+            except Exception:
+                pass
+                
+            self.wfile.write(json.dumps({"count": count}).encode('utf-8'))
         else:
             # Serve arquivos estáticos locais
             super().do_GET()

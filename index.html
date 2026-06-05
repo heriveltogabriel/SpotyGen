@@ -51,7 +51,7 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>Playlists do LP da Semana <i data-lucide="heart" class="heart-icon"></i> <a href="https://www.instagram.com/lpdasemana/" target="_blank" rel="noopener" class="link-instagram">Instagram</a></p>
+            <p>Playlists do LP da Semana <i data-lucide="heart" class="heart-icon"></i> <a href="https://www.instagram.com/lpdasemana/" target="_blank" rel="noopener" class="link-instagram">Instagram</a> <span style="opacity: 0.5; margin: 0 4px;">|</span> Acessos: <span id="access-count-val">...</span></p>
         </footer>
     </div>
 
@@ -206,7 +206,23 @@
             }, 1500);
         }
 
-        document.addEventListener('DOMContentLoaded', fetchPlaylists);
+        async function loadAccessCounter() {
+            try {
+                const res = await fetch('/api/access-count');
+                const data = await res.json();
+                const el = document.getElementById('access-count-val');
+                if (el && data.count !== undefined) {
+                    el.textContent = data.count.toLocaleString('pt-BR');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPlaylists();
+            loadAccessCounter();
+        });
     </script>
 </body>
 </html>

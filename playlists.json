@@ -80,6 +80,7 @@
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b27372833c1ae3343cbfb4617073",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLrnz4iRZQNleiuzqn3P_t6h6RkNHxZPtF",
     "appleMusicUrl": "https://music.apple.com/us/album/moving-pictures-remastered/1440798539",
+    "deezerUrl": "https://www.deezer.com/br/album/942295",
     "amazonMusicUrl": "https://music.amazon.com/albums/B07VR22CKX",
     "tidalUrl": "https://listen.tidal.com/album/77623600"
   },
@@ -112,6 +113,8 @@
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273cdf0c4ee39c76e4961424eab",
     "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_k3xPP8z3_mrGU6FapFS8sJE4pHJgOoYLA&si=tMzDNkDIH4gHEOsk",
     "appleMusicUrl": "https://music.apple.com/us/album/man-on-the-run-music-from-the-motion-picture-soundtrack/1874078813",
+    "deezerUrl": "https://www.deezer.com/br/album/923172311",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B0GHXH3ZX9",
     "tidalUrl": "https://listen.tidal.com/album/500582614"
   },
   {
@@ -133,6 +136,7 @@
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLzqsoINOR51ZNYuuINo2XVKJu9PQtAcdK",
     "appleMusicUrl": "https://music.apple.com/us/album/back-in-black/574050396",
     "deezerUrl": "https://www.deezer.com/album/9410100",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B00O6K888G",
     "tidalUrl": "https://listen.tidal.com/album/35986104"
   },
   {
@@ -164,7 +168,9 @@
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273f98de08cd017b515c9e61344",
     "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_m06CRLOK2cAR-K_8yAtaVCdCAEmQ6sjhU&si=OTF-L5HvcyJA_Agz",
     "appleMusicUrl": "https://music.apple.com/us/album/ac%C3%BAstico-ao-vivo-deluxe/1464080138",
-    "tidalUrl": "https://listen.tidal.com/album/110161066"
+    "tidalUrl": "https://listen.tidal.com/album/110161066",
+    "deezerUrl": "https://www.deezer.com/br/album/98188942",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B07S78Z6ZW"
   },
   {
     "name": "The Beatles - Abbey Road (Remastered)",
@@ -173,7 +179,8 @@
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273dc30583ba717007b00cceb25",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLeV1mJs_wDvpMWeVZqT624Z1_2Sg-pp0w",
     "appleMusicUrl": "https://music.apple.com/us/album/abbey-road-remastered/1441164426",
-    "deezerUrl": "https://www.deezer.com/album/632420",
+    "deezerUrl": "https://www.deezer.com/br/album/12047952",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B07FSXMG6Q",
     "tidalUrl": "https://listen.tidal.com/album/8755039"
   },
   {
@@ -182,7 +189,8 @@
     "spotifyUrl": "https://open.spotify.com/playlist/7KXsQGt7iIYmZsFMTC2uuj",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b2732d25993d21d52f3ce43138d0",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLMxy067kbpQgGpNugLpdhiIwv2PWUqyAf",
-    "appleMusicUrl": "https://music.apple.com/br/album/o-concreto-j%C3%A1-rachou/1444158655"
+    "deezerUrl": "https://www.deezer.com/br/album/39449681",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B0872J6QJ8"
   },
   {
     "name": "Green Day - Dookie",
@@ -190,7 +198,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/2EOvInJfim99cQ7FTGE8nt",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273db89b08034de626ebee6823d",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PL81_CtYCym28M8c2NFVCEIEBDCu6o1tXw",
-    "appleMusicUrl": "https://music.apple.com/us/album/stray-heart-single/568619352"
+    "appleMusicUrl": "https://music.apple.com/br/album/dookie/1160081985",
+    "deezerUrl": "https://www.deezer.com/br/album/81912",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B07VYKGZWT"
   },
   {
     "name": "Crosby, Stills, Nash & Young - Deja Vu",
@@ -198,7 +208,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/3d8lgisT2Vwvx5gGMd1GcS",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b27306e00756085191abc01e4cf0",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLBHcUEhUrXk4I9YCzqT8fRxh2zZtss6GY",
-    "appleMusicUrl": "https://music.apple.com/us/album/d%C3%A9j%C3%A0-vu/321974224"
+    "appleMusicUrl": "https://music.apple.com/us/album/d%C3%A9j%C3%A0-vu/321974224",
+    "deezerUrl": "https://www.deezer.com/br/album/356304",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B08XWQV538"
   },
   {
     "name": "Rita Lee - Fruto Proibido",
@@ -206,7 +218,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/55Lbph4suGfzx4k78m3yWS",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273ce31d86cb661d85d8a106327",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLa3HlKFsnLvYIPzMHm2lvE8SDXoEvsrYx",
-    "appleMusicUrl": "https://music.apple.com/us/album/fruto-proibido/712931448"
+    "appleMusicUrl": "https://music.apple.com/us/album/fruto-proibido/712931448",
+    "deezerUrl": "https://www.deezer.com/br/album/1451403",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B073JSM2X3"
   },
   {
     "name": "David Byrne - Who Is The Sky?",
@@ -214,7 +228,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/766sN32ZydMwW2rMCnR1Mt",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b2735e67e9cd6391df0e7a3537cf",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PL6n7xOfvov7C3RoGuA03h-PaSqKxaCo_U",
-    "appleMusicUrl": "https://music.apple.com/br/album/who-is-the-sky/1816027264"
+    "appleMusicUrl": "https://music.apple.com/br/album/who-is-the-sky/1816027264",
+    "deezerUrl": "https://www.deezer.com/br/album/804728191",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B0F9LP5B6Z"
   },
   {
     "name": "Cássia Eller - Acústico (Ao Vivo)",
@@ -222,7 +238,9 @@
     "spotifyUrl": "https://open.spotify.com/playlist/6Bv8NdO3LLiVpHB8LCnxaF",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b2731b9daff4eaffaa52f1a9c402",
     "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_n086En5DtXdz4HUdIOPivMTKC8r0zDAkA&si=Eio3-XhbgEAGlIEc",
-    "appleMusicUrl": "https://music.apple.com/br/album/ac%C3%BAstico/1442328303"
+    "appleMusicUrl": "https://music.apple.com/br/album/ac%C3%BAstico/1442328303",
+    "deezerUrl": "https://www.deezer.com/br/album/10115730",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B073JMCPRH"
   },
   {
     "name": "Pink Floyd - Wish You Were Here",
@@ -230,6 +248,8 @@
     "spotifyUrl": "https://open.spotify.com/playlist/3UCD4COK3dRCy9sB48xvQ8",
     "imageUrl": "https://i.scdn.co/image/ab67616d0000b273828e52cfb7bf22869349799e",
     "youtubeUrl": "https://music.youtube.com/playlist?list=PLfimnwaZdumgdg-BPofqK8h6cdkxIxe2H",
-    "appleMusicUrl": "https://music.apple.com/us/album/wish-you-were-here/1065973975"
+    "appleMusicUrl": "https://music.apple.com/us/album/wish-you-were-here/1065973975",
+    "deezerUrl": "https://www.deezer.com/br/album/12114242",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B019HKJT1Y"
   }
 ]

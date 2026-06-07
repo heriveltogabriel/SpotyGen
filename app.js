@@ -9,10 +9,11 @@ const state = {
     expiresAt: parseInt(localStorage.getItem('spotify_expires_at') || '0'),
     user: null,
     clientId: localStorage.getItem('spotify_client_id') || CONFIG.CLIENT_ID || '',
-    searchType: 'artist-top', // artist-top, album, artist-mix
+    searchType: 'album', // artist-top, album, artist-mix
     searchResults: [],
     selectedItem: null,
-    currentTracks: []
+    currentTracks: [],
+    originalAlbumUrl: ''
 };
 
 // Elementos da DOM
@@ -48,7 +49,18 @@ const DOM = {
     btnGeneratePlaylist: document.getElementById('btn-generate-playlist'),
     btnRemoveLast: document.getElementById('btn-remove-last'),
     btnClearAll: document.getElementById('btn-clear-all'),
-    toastContainer: document.getElementById('toast-container')
+    toastContainer: document.getElementById('toast-container'),
+    linkSpotify: document.getElementById('link-spotify'),
+    linkYoutube: document.getElementById('link-youtube'),
+    linkApple: document.getElementById('link-apple'),
+    linkDeezer: document.getElementById('link-deezer'),
+    linkAmazon: document.getElementById('link-amazon'),
+    btnSearchLinks: document.getElementById('btn-search-links'),
+    platformLinksGroup: document.getElementById('platform-links-group'),
+    helperSearchYoutube: document.getElementById('helper-search-youtube'),
+    helperSearchApple: document.getElementById('helper-search-apple'),
+    helperSearchDeezer: document.getElementById('helper-search-deezer'),
+    helperSearchAmazon: document.getElementById('helper-search-amazon')
 };
 
 // -------------------------------------------------------------
@@ -381,6 +393,116 @@ async function selectItem(item) {
 
     // Carregar músicas da pré-visualização
     await loadTracksForPreview(item);
+
+    // Se for álbum, mostrar e preencher os links
+    if (state.searchType === 'album') {
+        DOM.playlistMetaSettings.classList.remove('hidden');
+        DOM.platformLinksGroup.classList.remove('hidden');
+
+        const spotifyUrl = item.external_urls?.spotify || `https://open.spotify.com/album/${item.id}`;
+        state.originalAlbumUrl = spotifyUrl;
+        DOM.linkSpotify.value = spotifyUrl;
+
+        const artistName = item.artists ? item.artists[0].name : "";
+        const albumName = item.name || "";
+
+        // Buscar links equivalentes automaticamente
+        await searchAlbumLinks(spotifyUrl, artistName, albumName);
+    } else {
+        DOM.playlistMetaSettings.classList.remove('hidden');
+        DOM.platformLinksGroup.classList.add('hidden');
+    }
+}
+
+async function searchAlbumLinks(spotifyUrl, artistName = "", albumName = "") {
+    // Limpar campos e definir placeholders de busca
+    DOM.linkYoutube.value = "";
+    DOM.linkApple.value = "";
+    DOM.linkDeezer.value = "";
+    DOM.linkAmazon.value = "";
+
+    DOM.linkYoutube.placeholder = "Buscando no Odesli...";
+    DOM.linkApple.placeholder = "Buscando no Odesli...";
+    DOM.linkDeezer.placeholder = "Buscando no Odesli...";
+    DOM.linkAmazon.placeholder = "Buscando no Odesli...";
+
+    let yt = "";
+    let apple = "";
+    let deezer = "";
+    let amazon = "";
+
+    try {
+        showToast('Buscando links equivalentes no Odesli...', 'info');
+        const res = await fetch(`/api/odesli-proxy?url=${encodeURIComponent(spotifyUrl)}`);
+        if (res.ok) {
+            const data = await res.json();
+            if (data.linksByPlatform) {
+                yt = data.linksByPlatform.youtubeMusic?.url || data.linksByPlatform.youtube?.url || "";
+                apple = data.linksByPlatform.appleMusic?.url || data.linksByPlatform.itunes?.url || "";
+                deezer = data.linksByPlatform.deezer?.url || "";
+                amazon = data.linksByPlatform.amazonMusic?.url || "";
+            }
+        }
+    } catch (err) {
+        console.warn('Erro ao buscar links no Odesli:', err);
+    }
+
+    // Se a Apple Music não foi encontrada pelo Odesli, tentamos a API pública do iTunes (que costuma ser mais resiliente)
+    if (!apple && (artistName || albumName)) {
+        try {
+            console.log('Buscando Apple Music via iTunes Search API...');
+            const term = `${artistName} ${albumName}`.trim();
+            const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=album&limit=1`);
+            if (itunesRes.ok) {
+                const itunesData = await itunesRes.json();
+                if (itunesData.resultCount > 0 && itunesData.results[0].collectionViewUrl) {
+                    apple = itunesData.results[0].collectionViewUrl;
+                    console.log('Link da Apple Music encontrado via iTunes API:', apple);
+                }
+            }
+        } catch (itunesErr) {
+            console.warn('Erro ao buscar na iTunes Search API:', itunesErr);
+        }
+    }
+
+    // Se o Deezer não foi encontrado pelo Odesli, tentamos a API do Deezer via Proxy
+    if (!deezer && (artistName || albumName)) {
+        try {
+            console.log('Buscando Deezer via Deezer Search API Proxy...');
+            const term = `${artistName} ${albumName}`.trim();
+            const deezerRes = await fetch(`/api/deezer-proxy?q=${encodeURIComponent(term)}`);
+            if (deezerRes.ok) {
+                const deezerData = await deezerRes.json();
+                if (deezerData.data && deezerData.data.length > 0 && deezerData.data[0].link) {
+                    deezer = deezerData.data[0].link;
+                    console.log('Link do Deezer encontrado via Deezer API:', deezer);
+                }
+            }
+        } catch (deezerErr) {
+            console.warn('Erro ao buscar na Deezer Search API:', deezerErr);
+        }
+    }
+
+    // Preencher campos
+    DOM.linkYoutube.value = yt;
+    DOM.linkApple.value = apple;
+    DOM.linkDeezer.value = deezer;
+    DOM.linkAmazon.value = amazon;
+
+    // Atualizar placeholders
+    DOM.linkYoutube.placeholder = yt ? "" : "Não encontrado - Insira manualmente";
+    DOM.linkApple.placeholder = apple ? "" : "Não encontrado - Insira manualmente";
+    DOM.linkDeezer.placeholder = deezer ? "" : "Não encontrado - Insira manualmente";
+    DOM.linkAmazon.placeholder = amazon ? "" : "Não encontrado - Insira manualmente";
+
+    // Atualizar links auxiliares de pesquisa manual
+    updateSearchHelpers(artistName, albumName);
+
+    if (yt || apple || deezer || amazon) {
+        showToast('Busca de links finalizada!', 'success');
+    } else {
+        showToast('Nenhum link correspondente foi encontrado. Insira manualmente.', 'warning');
+    }
 }
 
 async function loadTracksForPreview(item) {
@@ -583,33 +705,34 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
                     }
                 }
 
-                let upc = '';
+                let spotUrl = playlist.external_urls.spotify;
                 let ytUrl = "";
                 let appleUrl = "";
                 let deezerUrl = "";
                 let amazonUrl = "";
 
-                if (albumId) {
+                if (state.searchType === 'album') {
+                    // Use input values because the user might have customized them
+                    const enteredSpotUrl = DOM.linkSpotify.value.trim();
+                    if (enteredSpotUrl && enteredSpotUrl !== state.originalAlbumUrl) {
+                        spotUrl = enteredSpotUrl;
+                    }
+                    ytUrl = DOM.linkYoutube.value.trim();
+                    appleUrl = DOM.linkApple.value.trim();
+                    deezerUrl = DOM.linkDeezer.value.trim();
+                    amazonUrl = DOM.linkAmazon.value.trim();
+                } else if (albumId) {
                     try {
-                        console.log('Buscando dados do álbum no Spotify para extrair o UPC:', albumId);
                         const albumData = await spotifyRequest(`/albums/${albumId}`);
-                        if (albumData && albumData.external_ids && albumData.external_ids.upc) {
-                            upc = albumData.external_ids.upc;
-                            console.log('UPC do álbum obtido com sucesso:', upc);
-                        }
-                        
-                        // Buscar links no Odesli usando a URL do álbum do Spotify
                         const spotifyAlbumUrl = albumData.external_urls?.spotify || `https://open.spotify.com/album/${albumId}`;
-                        console.log('Consultando links equivalentes no Odesli para:', spotifyAlbumUrl);
-                        const odesliRes = await fetch(`https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(spotifyAlbumUrl)}`);
+                        const odesliRes = await fetch(`/api/odesli-proxy?url=${encodeURIComponent(spotifyAlbumUrl)}`);
                         if (odesliRes.ok) {
                             const odesliData = await odesliRes.json();
-                            if (odesliData.linksByPlatform) {
-                                ytUrl = odesliData.linksByPlatform.youtubeMusic?.url || "";
-                                appleUrl = odesliData.linksByPlatform.appleMusic?.url || "";
+                             if (odesliData.linksByPlatform) {
+                                 ytUrl = odesliData.linksByPlatform.youtubeMusic?.url || odesliData.linksByPlatform.youtube?.url || "";
+                                 appleUrl = odesliData.linksByPlatform.appleMusic?.url || odesliData.linksByPlatform.itunes?.url || "";
                                 deezerUrl = odesliData.linksByPlatform.deezer?.url || "";
                                 amazonUrl = odesliData.linksByPlatform.amazonMusic?.url || "";
-                                console.log('Links resolvidos via Odesli:', { ytUrl, appleUrl, deezerUrl, amazonUrl });
                             }
                         }
                     } catch (errAlbumInfo) {
@@ -625,7 +748,7 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
                     body: JSON.stringify({
                         name: title,
                         description: description || `Playlist criada por PlaylistGen`,
-                        spotifyUrl: playlist.external_urls.spotify,
+                        spotifyUrl: spotUrl,
                         imageUrl: imageUrl,
                         youtubeUrl: ytUrl,
                         appleMusicUrl: appleUrl,
@@ -642,11 +765,18 @@ DOM.btnGeneratePlaylist.addEventListener('click', async () => {
             
             // Resetar formulário
             DOM.playlistMetaSettings.classList.add('hidden');
+            DOM.platformLinksGroup.classList.add('hidden');
             DOM.previewContent.classList.add('hidden');
             DOM.previewPlaceholder.classList.remove('hidden');
             DOM.searchInput.value = '';
             DOM.playlistTitle.value = '';
             DOM.playlistDesc.value = '';
+            DOM.linkSpotify.value = '';
+            DOM.linkYoutube.value = '';
+            DOM.linkApple.value = '';
+            DOM.linkDeezer.value = '';
+            DOM.linkAmazon.value = '';
+            updateSearchHelpers("", "");
             state.selectedItem = null;
             state.currentTracks = [];
         }
@@ -685,6 +815,39 @@ DOM.tabBtns.forEach(btn => {
             performSearch(query);
         }
     });
+});
+
+// Botão de busca manual do Odesli
+DOM.btnSearchLinks.addEventListener('click', async () => {
+    const spotifyUrl = DOM.linkSpotify.value.trim();
+    if (spotifyUrl) {
+        let artistName = "";
+        let albumName = "";
+        
+        // Tentar obter dados atualizados do Spotify se a URL colada for um álbum válido
+        const albumId = getSpotifyAlbumId(spotifyUrl);
+        if (albumId) {
+            try {
+                const albumData = await spotifyRequest(`/albums/${albumId}`);
+                if (albumData) {
+                    artistName = albumData.artists ? albumData.artists[0].name : "";
+                    albumName = albumData.name || "";
+                }
+            } catch (err) {
+                console.warn('Erro ao obter detalhes do novo Spotify URL:', err);
+            }
+        }
+        
+        // Fallback para o item selecionado se não conseguiu buscar pela URL
+        if (!artistName && state.selectedItem) {
+            artistName = state.selectedItem.artists ? state.selectedItem.artists[0].name : "";
+            albumName = state.selectedItem.name || "";
+        }
+        
+        await searchAlbumLinks(spotifyUrl, artistName, albumName);
+    } else {
+        showToast('Nenhuma URL do Spotify informada para buscar.', 'warning');
+    }
 });
 
 // Botão Conectar Spotify
@@ -863,4 +1026,64 @@ async function initApp() {
 
 // Inicializar aplicativo
 initApp();
+
+// -------------------------------------------------------------
+// HELPERS PARA PESQUISA AUXILIAR E CORREÇÃO DE PLATAFORMAS
+// -------------------------------------------------------------
+function getSpotifyAlbumId(url) {
+    try {
+        const match = url.match(/\/album\/([a-zA-Z0-9]{22})/);
+        return match ? match[1] : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function updateSearchHelpers(artistName, albumName) {
+    if (!artistName && !albumName) {
+        DOM.helperSearchYoutube.classList.add('hidden');
+        DOM.helperSearchApple.classList.add('hidden');
+        DOM.helperSearchDeezer.classList.add('hidden');
+        DOM.helperSearchAmazon.classList.add('hidden');
+        return;
+    }
+
+    const searchQuery = `${artistName} ${albumName}`.trim();
+
+    // YouTube Music helper
+    const ytSearchUrl = `https://music.youtube.com/search?q=${encodeURIComponent(searchQuery)}`;
+    DOM.helperSearchYoutube.href = ytSearchUrl;
+    if (!DOM.linkYoutube.value) {
+        DOM.helperSearchYoutube.classList.remove('hidden');
+    } else {
+        DOM.helperSearchYoutube.classList.add('hidden');
+    }
+
+    // Apple Music helper
+    const appleSearchUrl = `https://music.apple.com/search?term=${encodeURIComponent(searchQuery)}`;
+    DOM.helperSearchApple.href = appleSearchUrl;
+    if (!DOM.linkApple.value) {
+        DOM.helperSearchApple.classList.remove('hidden');
+    } else {
+        DOM.helperSearchApple.classList.add('hidden');
+    }
+
+    // Deezer helper
+    const deezerSearchUrl = `https://www.deezer.com/search/${encodeURIComponent(searchQuery)}`;
+    DOM.helperSearchDeezer.href = deezerSearchUrl;
+    if (!DOM.linkDeezer.value) {
+        DOM.helperSearchDeezer.classList.remove('hidden');
+    } else {
+        DOM.helperSearchDeezer.classList.add('hidden');
+    }
+
+    // Amazon Music helper
+    const amazonSearchUrl = `https://music.amazon.com.br/search/${encodeURIComponent(searchQuery)}`;
+    DOM.helperSearchAmazon.href = amazonSearchUrl;
+    if (!DOM.linkAmazon.value) {
+        DOM.helperSearchAmazon.classList.remove('hidden');
+    } else {
+        DOM.helperSearchAmazon.classList.add('hidden');
+    }
+}
 

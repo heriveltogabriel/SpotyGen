@@ -28,9 +28,12 @@
                 <h1>Playlist<span>Gen</span></h1>
             </div>
             
-            <div class="header-actions" style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button id="btn-settings" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600;" title="Configurações & Painel de Controle">
-                    <i data-lucide="sliders" style="width: 16px; height: 16px;"></i> Painel
+            <div class="header-actions" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <a href="index.html" class="btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 50%; width: 40px; height: 40px; padding: 0; transition: var(--transition-smooth); cursor: pointer;" title="Ir para a página principal (LP da Semana)">
+                    <i data-lucide="home" style="width: 18px; height: 18px;"></i>
+                </a>
+                <button id="btn-settings" class="btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px; padding: 0; transition: var(--transition-smooth);" title="Painel de Controle">
+                    <i data-lucide="sliders" style="width: 18px; height: 18px;"></i>
                 </button>
                 
                 <!-- Spotify profile & login -->
@@ -82,11 +85,11 @@
                     <div class="options-group">
                         <label>Tipo de Playlist</label>
                         <div class="tabs">
-                            <button class="tab-btn active" data-type="artist-top">
-                                <i data-lucide="user"></i> Top Músicas
-                            </button>
-                            <button class="tab-btn" data-type="album">
+                            <button class="tab-btn active" data-type="album">
                                 <i data-lucide="disc"></i> Álbum Inteiro
+                            </button>
+                            <button class="tab-btn" data-type="artist-top">
+                                <i data-lucide="user"></i> Top Músicas
                             </button>
                             <button class="tab-btn" data-type="artist-mix">
                                 <i data-lucide="shuffle"></i> Mix de Similares
@@ -110,10 +113,57 @@
                             <label for="playlist-desc">Descrição</label>
                             <textarea id="playlist-desc" rows="2" placeholder="Playlist criada automaticamente pelo PlaylistGen."></textarea>
                         </div>
-                        
-                        <!-- Links are now retrieved automatically via Odesli API -->
+                        <!-- Platform Links Section -->
+                        <div class="platform-links-group hidden" id="platform-links-group" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <label style="margin-bottom: 0; font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Links das Plataformas</label>
+                                <button type="button" id="btn-search-links" class="btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 4px; display: flex; align-items: center; gap: 0.25rem; cursor: pointer;">
+                                    <i data-lucide="search" style="width: 12px; height: 12px;"></i> Buscar (Odesli)
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label for="link-spotify">Spotify URL (Álbum)</label>
+                                <input type="text" id="link-spotify" placeholder="Selecione um álbum ou insira a URL...">
+                            </div>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="link-youtube">YouTube Music URL</label>
+                                    <a id="helper-search-youtube" href="#" target="_blank" class="search-helper hidden" style="font-size: 11px; color: var(--accent-light); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                        <i data-lucide="search" style="width: 11px; height: 11px;"></i> Pesquisar
+                                    </a>
+                                </div>
+                                <input type="text" id="link-youtube" placeholder="Aguardando busca no Odesli...">
+                            </div>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="link-apple">Apple Music URL</label>
+                                    <a id="helper-search-apple" href="#" target="_blank" class="search-helper hidden" style="font-size: 11px; color: var(--accent-light); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                        <i data-lucide="search" style="width: 11px; height: 11px;"></i> Pesquisar
+                                    </a>
+                                </div>
+                                <input type="text" id="link-apple" placeholder="Aguardando busca no Odesli...">
+                            </div>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="link-deezer">Deezer URL</label>
+                                    <a id="helper-search-deezer" href="#" target="_blank" class="search-helper hidden" style="font-size: 11px; color: var(--accent-light); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                        <i data-lucide="search" style="width: 11px; height: 11px;"></i> Pesquisar
+                                    </a>
+                                </div>
+                                <input type="text" id="link-deezer" placeholder="Aguardando busca no Odesli...">
+                            </div>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label for="link-amazon">Amazon Music URL</label>
+                                    <a id="helper-search-amazon" href="#" target="_blank" class="search-helper hidden" style="font-size: 11px; color: var(--accent-light); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                        <i data-lucide="search" style="width: 11px; height: 11px;"></i> Pesquisar
+                                    </a>
+                                </div>
+                                <input type="text" id="link-amazon" placeholder="Aguardando busca no Odesli...">
+                            </div>
+                        </div>
 
-                        <button id="btn-generate-playlist" class="btn-success btn-full">
+                        <button id="btn-generate-playlist" class="btn-success btn-full" style="margin-top: 1.5rem;">
                             <i data-lucide="plus-circle"></i> Criar & Publicar LP
                         </button>
                     </div>
@@ -230,8 +280,8 @@
     <!-- Toast Notifications -->
     <div id="toast-container" class="toast-container"></div>
 
-    <script src="config.js?v=1.1"></script>
-    <script src="app.js?v=1.1"></script>
+    <script src="config.js?v=1.6"></script>
+    <script src="app.js?v=1.6"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();

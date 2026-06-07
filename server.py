@@ -57,6 +57,76 @@ class PlaylistHandler(SimpleHTTPRequestHandler):
                 pass
                 
             self.wfile.write(json.dumps({"count": count}).encode('utf-8'))
+        elif self.path.startswith('/api/odesli-proxy'):
+            from urllib.parse import urlparse, parse_qs, quote
+            import urllib.request
+            parsed_url = urlparse(self.path)
+            params = parse_qs(parsed_url.query)
+            target_url = params.get('url', [None])[0]
+            
+            if not target_url:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Parâmetro url é obrigatório"}).encode('utf-8'))
+                return
+                
+            try:
+                odesli_url = f"https://api.song.link/v1-alpha.1/links?url={quote(target_url)}"
+                req = urllib.request.Request(
+                    odesli_url, 
+                    headers={'User-Agent': 'Mozilla/5.0'}
+                )
+                with urllib.request.urlopen(req, timeout=10) as response:
+                    data = response.read()
+                    
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(data)
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
+        elif self.path.startswith('/api/deezer-proxy'):
+            from urllib.parse import urlparse, parse_qs, quote
+            import urllib.request
+            parsed_url = urlparse(self.path)
+            params = parse_qs(parsed_url.query)
+            query = params.get('q', [None])[0]
+            
+            if not query:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Parâmetro q é obrigatório"}).encode('utf-8'))
+                return
+                
+            try:
+                deezer_url = f"https://api.deezer.com/search/album?q={quote(query)}&limit=1"
+                req = urllib.request.Request(
+                    deezer_url, 
+                    headers={'User-Agent': 'Mozilla/5.0'}
+                )
+                with urllib.request.urlopen(req, timeout=10) as response:
+                    data = response.read()
+                    
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(data)
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
         else:
             # Serve arquivos estáticos locais
             super().do_GET()

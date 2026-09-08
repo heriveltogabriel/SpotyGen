@@ -1,5 +1,135 @@
 [
   {
+    "name": "R.E.M. - Out Of Time",
+    "description": "LP da Semana #37",
+    "spotifyUrl": "https://open.spotify.com/playlist/490I2uFwDlQyrpd0hNtOfN",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b273d766cd2d2bb125f58ef22c22",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_k4rQyc-c-QTgUKkDSKyjVso_VJv9411fU",
+    "appleMusicUrl": "https://music.apple.com/us/album/know-your-worth-single/1496429732?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/14581358",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B073JMV3N1"
+  },
+  {
+    "name": "Lulu Santos - Último Romântico",
+    "description": "LP da Semana #36",
+    "spotifyUrl": "https://open.spotify.com/playlist/1jOFhLJCDxVx9zvXjU1s9Z",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b273463363e6b8708c8de437964a",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_mdTMT9kuFpMTRtHwqMO8MywEwhocehu00",
+    "appleMusicUrl": "https://music.apple.com/us/album/%C3%BAltimo-rom%C3%A2ntico/25454570?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/8291940",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B0013JZEOE"
+  },
+  {
+    "name": "LedZeppelin IV",
+    "description": "LP da Semana  #35",
+    "spotifyUrl": "https://open.spotify.com/intl-pt/album/6P5QHz4XtxOmS5EuiGIPut",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b273d97335740a89e0b10c6551ce",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_miixGWs374VbB0oCVRHZ2JWssBydwz7V8",
+    "appleMusicUrl": "https://music.apple.com/us/album/led-zeppelin-iv-ep/1031489172?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/11045624",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B014BU7J80"
+  },
+  {
+    "name": "Capital Inicial - Capital Inicial",
+    "description": "LP da Semana #34",
+    "spotifyUrl": "https://open.spotify.com/playlist/3FJ5WWSQy1xf2Y1xC0rbR9",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b273b87bcfcea80521744480417a",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=PLS1TpdZAiBnaLUgqes7h6e-d6XCJgYKSG",
+    "appleMusicUrl": "https://music.apple.com/us/album/capital-inicial-mega-hits/726614142?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/14713266",
+    "amazonMusicUrl": ""
+  },
+  {
+    "name": "Nirvana - Nevermind (Remastered)",
+    "description": "LP da Semana #33",
+    "spotifyUrl": "https://open.spotify.com/playlist/3mqLhOJbZF1BFpVXISCOaJ",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b273fbc71c99f9c1296c56dd51b6",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=PLGk538JpB6PDe3uC9B0NsjIQEuvyl_XDz",
+    "appleMusicUrl": "https://music.apple.com/br/album/nevermind/1440783617",
+    "deezerUrl": "https://www.deezer.com/album/1252978",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B005MVLI8A"
+  },
+  {
+    "name": "RPM - Radio Pirata Ao Vivo",
+    "description": "LP da Semana",
+    "spotifyUrl": "https://open.spotify.com/playlist/7p8aY1RZfs3Pu7B0I4B3XU",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b27311456defcb245f79842aa577",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_kAkCgEyol0SpgRiUnhpuQ8e0eQdi9jtKo",
+    "appleMusicUrl": "https://music.apple.com/us/album/r%C3%A1dio-pirata-ao-vivo/321744453?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/1215606",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B002P0T9H8"
+  },
+  {
+    "name": "The Smiths - The Queen Is Dead",
+    "description": "LP da Semana #31",
+    "spotifyUrl": "https://open.spotify.com/playlist/4Y9naQH1lbR7Xi0xIlA8U5",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b2736236778a208a15eb71079601",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_klS8Pn413KiwpcfIJpyE2aghZDLqAE-dY",
+    "appleMusicUrl": "https://music.apple.com/us/album/the-queen-is-dead/800092985?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/1261474",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B005TLXW1O"
+  },
+  {
+    "name": "Legião Urbana - Dois",
+    "description": "LP da Semana #30",
+    "spotifyUrl": "https://open.spotify.com/playlist/5iLi8PlQogFOLRQ64X0UIM",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b2731eb5e996639036a49b09f1e5",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_k3EjlZCOZCFpejnHRLalNOYpynTJrW_7A",
+    "appleMusicUrl": "https://music.apple.com/us/album/dois/713514746?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/334284",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B0040MJM2G"
+  },
+  {
+    "name": "George Harrison - Living in the Material World (50th Anniversary)",
+    "description": "LP da Semana #29",
+    "spotifyUrl": "https://open.spotify.com/playlist/1FguID0dSUJsJLaHEp3ril",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b273005dd79730c860354e5907b6",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_nhqhLE9HW6INbaLW_v96ye_jqz5zASX3w",
+    "appleMusicUrl": "https://music.apple.com/us/album/living-in-the-material-world-50th-anniversary/1767451756?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/642073461",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B0DZQKBTZX"
+  },
+  {
+    "name": "New Order, Joy Division - TOTAL",
+    "description": "LP da Semana #28",
+    "spotifyUrl": "https://open.spotify.com/playlist/6jkafrGcHVLUkx5WR0S7NH",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b2737b2ed55c469487b2be37cac0",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_lUFhadCRdoESvYLQ795rNQ56J3x-089Yw",
+    "appleMusicUrl": "https://music.apple.com/us/album/total/439593473?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/1126062",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B0057U7AZ6"
+  },
+  {
+    "name": "Titãs - Cabeça Dinossauro",
+    "description": "LP da Semana #27",
+    "spotifyUrl": "https://open.spotify.com/playlist/4dsAeTFTuXrhcid2am2qzb",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b2735bb332941b7b3d33cf9e7a5e",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_nvDP-TX-cNh0xrWnEJzCjsoIeV_pS5sIw",
+    "appleMusicUrl": "https://music.apple.com/us/album/cabe%C3%A7a-dinossauro/272505436?uo=4",
+    "deezerUrl": "https://www.deezer.com/album/382561",
+    "amazonMusicUrl": "https://music.amazon.com/albums/B001APD4BG"
+  },
+  {
+    "name": "Seu Pereira e Coletivo 401 - Eu Não Sou Boa Influência pra Você",
+    "description": "LP da Semana #26",
+    "spotifyUrl": "https://open.spotify.com/playlist/2CNAC5X0o7g77H4rq36dbS",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b2730504fd92867c6ded742de228",
+    "youtubeUrl": "https://music.youtube.com/playlist?list=OLAK5uy_kpQ-ncD80j6M2A0wf4gQYUjbBjezOy1-4",
+    "appleMusicUrl": "https://music.apple.com/us/album/eu-n%C3%A3o-sou-boa-influ%C3%AAncia-pra-voc%C3%AA/1666626476?uo=4",
+    "deezerUrl": "https://www.deezer.com/br/album/394813617",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B0BRYSF9XX"
+  },
+  {
+    "name": "Foo Fighters - Wasting Light",
+    "description": "LP da Semana #25",
+    "spotifyUrl": "https://open.spotify.com/playlist/5NVy7rkvWQN7YndMLFKsOq",
+    "imageUrl": "https://i.scdn.co/image/ab67616d0000b273fc14d5117520d5bce369a543",
+    "youtubeUrl": "https://music.youtube.com/search?q=Wasting+Light+Foo+Fighters",
+    "appleMusicUrl": "https://music.apple.com/us/album/wasting-light/456563917?uo=4",
+    "deezerUrl": "https://www.deezer.com/br/album/940640",
+    "amazonMusicUrl": "https://music.amazon.com.br/albums/B004UOCF3W"
+  },
+  {
     "name": "Cazuza - O Tempo Não Para - O Show Completo (Ao Vivo)",
     "description": "LP da Semana #24",
     "spotifyUrl": "https://open.spotify.com/playlist/0EaK5SIT5J0tpoar7f5kbF",

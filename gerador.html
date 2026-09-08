@@ -32,6 +32,9 @@
                 <a href="index.html" class="btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 50%; width: 40px; height: 40px; padding: 0; transition: var(--transition-smooth); cursor: pointer;" title="Ir para a página principal (LP da Semana)">
                     <i data-lucide="home" style="width: 18px; height: 18px;"></i>
                 </a>
+                <button id="btn-edit-collection" class="btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px; padding: 0; transition: var(--transition-smooth);" title="Editar Coleção (LP da Semana)">
+                    <i data-lucide="edit-3" style="width: 18px; height: 18px;"></i>
+                </button>
                 <button id="btn-settings" class="btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px; padding: 0; transition: var(--transition-smooth);" title="Painel de Controle">
                     <i data-lucide="sliders" style="width: 18px; height: 18px;"></i>
                 </button>
@@ -277,11 +280,50 @@
         </div>
     </div>
 
+    <!-- Collection Editor Modal -->
+    <div id="collection-editor-modal" class="modal-overlay hidden">
+        <div class="modal modal-lg glass-panel">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="edit-3" class="spotify-green-text"></i>
+                    <h2>Editar Coleção do LP da Semana</h2>
+                </div>
+                <button id="btn-close-collection-editor" class="btn-icon-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body" style="padding: 1.25rem 1.5rem;">
+                <p class="settings-help">Gerencie, edite ou remova qualquer LP publicado no site público <strong>lpdasemana.com.br</strong>.</p>
+                
+                <div class="editor-toolbar" style="display: flex; gap: 12px; margin: 16px 0; align-items: center; justify-content: space-between;">
+                    <div class="search-box" style="flex: 1; max-width: 400px; margin: 0;">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="collection-search-input" placeholder="Filtrar por artista, álbum ou #LP..." autocomplete="off">
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                        Total: <strong id="collection-count" style="color: var(--text-primary);">0</strong> LPs
+                    </div>
+                </div>
+
+                <div id="collection-list-container" class="collection-list-container" style="max-height: 55vh; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 12px;">
+                    <!-- JS vai popular os cards dos LPs aqui -->
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="editor-status-msg" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+                <div style="display: flex; gap: 10px;">
+                    <button id="btn-cancel-collection-editor" class="btn-secondary">Cancelar</button>
+                    <button id="btn-save-collection-all" class="btn-success" style="display: inline-flex; align-items: center; gap: 8px;">
+                        <i data-lucide="save" style="width: 16px; height: 16px;"></i> Salvar Alterações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notifications -->
     <div id="toast-container" class="toast-container"></div>
 
-    <script src="config.js?v=1.8"></script>
-    <script src="app.js?v=1.8"></script>
+    <script src="config.js?v=1.9"></script>
+    <script src="app.js?v=1.9"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();

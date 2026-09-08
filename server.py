@@ -257,19 +257,29 @@ class PlaylistHandler(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
 
-        elif self.path == '/api/playlists/clear-all':
+        elif self.path == '/api/playlists/save-all':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
             try:
-                # Grava lista vazia
+                playlists = json.loads(post_data.decode('utf-8'))
+                if not isinstance(playlists, list):
+                    raise ValueError("O payload deve ser uma lista de playlists.")
+                
                 with open(FILE_PATH, 'w', encoding='utf-8') as f:
-                    json.dump([], f, ensure_ascii=False, indent=2)
+                    json.dump(playlists, f, ensure_ascii=False, indent=2)
+                
+                try:
+                    os.chmod(FILE_PATH, 0o664)
+                except Exception:
+                    pass
                 
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
-                self.wfile.write(json.dumps({"status": "success", "message": "Todas as playlists foram removidas da página pública."}).encode('utf-8'))
+                self.wfile.write(json.dumps({"status": "success", "count": len(playlists)}).encode('utf-8'))
             except Exception as e:
-                self.send_response(500)
+                self.send_response(400)
                 self.send_header('Content-Type', 'application/json')
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()

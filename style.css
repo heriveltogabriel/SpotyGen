@@ -951,3 +951,128 @@ input:disabled, textarea:disabled {
         opacity: 1;
     }
 }
+
+/* Collection Editor Modal Styles */
+.modal-lg {
+    max-width: 850px;
+    width: 90%;
+}
+
+.collection-item-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.collection-item-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.collection-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    gap: 12px;
+    user-select: none;
+}
+
+.collection-item-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.collection-item-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #222;
+    flex-shrink: 0;
+}
+
+.collection-item-titles {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.collection-item-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.collection-item-sub {
+    font-size: 0.78rem;
+    color: var(--spotify-green);
+    font-weight: 600;
+}
+
+.collection-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-icon-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-icon-sm:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+}
+
+.btn-icon-danger:hover {
+    background: rgba(229, 62, 62, 0.2);
+    color: #e53e3e;
+    border-color: rgba(229, 62, 62, 0.4);
+}
+
+.collection-item-form {
+    padding: 14px;
+    border-top: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.3);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.collection-item-form .form-group-full {
+    grid-column: span 2;
+}
+
+.collection-item-form label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.collection-item-form input {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    background: rgba(0, 0, 0, 0.4);
+}

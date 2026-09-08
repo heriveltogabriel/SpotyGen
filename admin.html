@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador - LP da Semana</title>
+    <meta name="description" content="Painel de Edição do LP da Semana.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Style sheet -->
+    <link rel="stylesheet" href="lps.css?v=1.4">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header animate-fade-in" style="margin-bottom: 16px;">
+            <div class="logo-container">
+                <img src="logo.jpg" alt="LP da Semana Logo" class="logo-img">
+            </div>
+            <h1 style="font-size: 1.3rem; margin-top: 8px; font-weight: 700;">Gerenciador LP da Semana</h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Edite discos, altere links ou reordene a coleção pública.</p>
+            
+            <div style="display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: center;">
+                <a href="gerador.html" class="btn-admin btn-admin-secondary">
+                    <i data-lucide="music-4"></i> Ir para o PlaylistGen
+                </a>
+                <a href="index.html" target="_blank" class="btn-admin btn-admin-secondary">
+                    <i data-lucide="external-link"></i> Ver Site Público
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="playlists-container animate-fade-in-up">
+            
+            <!-- SCREEN 1: Lista de LPs (Estilo lpdasemana.com.br) -->
+            <div id="screen-list-view">
+                <div style="margin-bottom: 16px; display: flex; gap: 10px; align-items: center;">
+                    <div style="position: relative; flex: 1;">
+                        <input type="text" id="admin-search-input" class="admin-form-input" placeholder="Pesquisar por artista, álbum ou #LP..." autocomplete="off">
+                    </div>
+                    <span style="font-size: 0.82rem; color: var(--text-muted); white-space: nowrap;">
+                        <strong id="admin-total-count" style="color: var(--text-primary);">0</strong> LPs
+                    </span>
+                </div>
+
+                <div id="admin-loading-state" class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Carregando coleção...</p>
+                </div>
+
+                <div id="admin-playlists-list" class="playlists-list">
+                    <!-- Dynamic items rendered via JavaScript -->
+                </div>
+            </div>
+
+            <!-- SCREEN 2: Edição do LP Selecionado -->
+            <div id="screen-edit-view" class="hidden">
+                <div class="single-edit-container">
+                    <div class="edit-header-bar">
+                        <button id="btn-back-to-list" class="btn-admin btn-admin-secondary">
+                            <i data-lucide="arrow-left"></i> Voltar para a Lista
+                        </button>
+                        <span id="edit-header-title" style="font-weight: 700; font-size: 0.95rem; color: var(--spotify-green);">Editando LP</span>
+                    </div>
+
+                    <!-- Single Item Preview Box -->
+                    <div class="edit-preview-card glass-panel">
+                        <img id="edit-preview-img" class="edit-preview-cover" src="logo.jpg" alt="Capa" onerror="this.src='logo.jpg'">
+                        <div>
+                            <h2 id="edit-preview-artist" style="font-size: 1.2rem; font-weight: 700;">Nome do Artista</h2>
+                            <p id="edit-preview-album" style="font-size: 1rem; color: var(--text-secondary);">Nome do Álbum</p>
+                            <span id="edit-preview-desc" style="font-size: 0.8rem; color: var(--spotify-green); font-weight: 600;">LP da Semana</span>
+                        </div>
+                        <button type="button" id="btn-auto-search-links" class="btn-admin btn-admin-secondary" style="font-size: 0.78rem;">
+                            <i data-lucide="sparkles"></i> Buscar links faltantes no Odesli
+                        </button>
+                    </div>
+
+                    <!-- Edit Form -->
+                    <div class="glass-panel" style="padding: 20px;">
+                        <div class="admin-form-group">
+                            <label for="input-artist">Artista</label>
+                            <input type="text" id="input-artist" class="admin-form-input" placeholder="Ex: Led Zeppelin">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-album">Nome do Álbum</label>
+                            <input type="text" id="input-album" class="admin-form-input" placeholder="Ex: Led Zeppelin IV">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-desc">Descrição / Edição</label>
+                            <input type="text" id="input-desc" class="admin-form-input" placeholder="Ex: LP da Semana #35">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-spotify">Spotify URL</label>
+                            <input type="text" id="input-spotify" class="admin-form-input" placeholder="https://open.spotify.com/album/...">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-youtube">YouTube Music URL</label>
+                            <input type="text" id="input-youtube" class="admin-form-input" placeholder="https://music.youtube.com/playlist?list=...">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-apple">Apple Music URL</label>
+                            <input type="text" id="input-apple" class="admin-form-input" placeholder="https://music.apple.com/us/album/...">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-deezer">Deezer URL</label>
+                            <input type="text" id="input-deezer" class="admin-form-input" placeholder="https://www.deezer.com/album/...">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-amazon">Amazon Music URL</label>
+                            <input type="text" id="input-amazon" class="admin-form-input" placeholder="https://music.amazon.com.br/albums/...">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="input-image">URL da Capa (Imagem)</label>
+                            <input type="text" id="input-image" class="admin-form-input" placeholder="https://i.scdn.co/image/...">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+                            <button id="btn-save-single" class="btn-admin btn-admin-primary" style="padding: 12px; font-size: 0.95rem; width: 100%;">
+                                <i data-lucide="save"></i> Salvar Alterações deste LP
+                            </button>
+                            <button id="btn-delete-single" class="btn-admin btn-admin-danger" style="padding: 10px; width: 100%;">
+                                <i data-lucide="trash-2"></i> Excluir este LP da Coleção
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Gerenciador do LP da Semana <i data-lucide="heart" class="heart-icon"></i></p>
+        </footer>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-box" class="toast-box hidden">
+        <i id="toast-icon" data-lucide="check-circle" style="color: var(--spotify-green);"></i>
+        <span id="toast-msg">Mensagem</span>
+    </div>
+
+    <!-- Application Script -->
+    <script src="admin.js?v=1.0"></script>
+</body>
+</html>

@@ -414,6 +414,26 @@ async function selectItem(item) {
     }
 }
 
+async function fetchOdesliLinks(url) {
+    try {
+        const res = await fetch(`/api/odesli-proxy?url=${encodeURIComponent(url)}`);
+        if (res.ok) {
+            const data = await res.json();
+            if (data.linksByPlatform) {
+                return {
+                    yt: data.linksByPlatform.youtubeMusic?.url || data.linksByPlatform.youtube?.url || "",
+                    apple: data.linksByPlatform.appleMusic?.url || data.linksByPlatform.itunes?.url || "",
+                    deezer: data.linksByPlatform.deezer?.url || "",
+                    amazon: data.linksByPlatform.amazonMusic?.url || ""
+                };
+            }
+        }
+    } catch (err) {
+        console.warn('Erro ao buscar links no Odesli para URL:', url, err);
+    }
+    return null;
+}
+
 async function searchAlbumLinks(spotifyUrl, artistName = "", albumName = "") {
     // Limpar campos e definir placeholders de busca
     DOM.linkYoutube.value = "";
@@ -431,23 +451,25 @@ async function searchAlbumLinks(spotifyUrl, artistName = "", albumName = "") {
     let deezer = "";
     let amazon = "";
 
+    // 1. Limpar a URL do Spotify (remover parâmetros de tracking como ?si=...)
+    const cleanSpotifyUrl = spotifyUrl.split('?')[0];
+
+    // Etapa 1: Tentar buscar no Odesli usando a URL limpa do Spotify
     try {
-        showToast('Buscando links equivalentes no Odesli...', 'info');
-        const res = await fetch(`/api/odesli-proxy?url=${encodeURIComponent(spotifyUrl)}`);
-        if (res.ok) {
-            const data = await res.json();
-            if (data.linksByPlatform) {
-                yt = data.linksByPlatform.youtubeMusic?.url || data.linksByPlatform.youtube?.url || "";
-                apple = data.linksByPlatform.appleMusic?.url || data.linksByPlatform.itunes?.url || "";
-                deezer = data.linksByPlatform.deezer?.url || "";
-                amazon = data.linksByPlatform.amazonMusic?.url || "";
-            }
+        showToast('Buscando links equivalentes no Odesli (Spotify URL)...', 'info');
+        const odesliResult = await fetchOdesliLinks(cleanSpotifyUrl);
+        if (odesliResult) {
+            yt = odesliResult.yt;
+            apple = odesliResult.apple;
+            deezer = odesliResult.deezer;
+            amazon = odesliResult.amazon;
         }
     } catch (err) {
-        console.warn('Erro ao buscar links no Odesli:', err);
+        console.warn('Erro na Etapa 1 (Odesli Spotify):', err);
     }
 
-    // Se a Apple Music não foi encontrada pelo Odesli, tentamos a API pública do iTunes (que costuma ser mais resiliente)
+    // Etapa 2: Se a Apple Music ou o Deezer não foram encontrados, tentamos os fallbacks diretos
+    // Apple Music via iTunes Search API
     if (!apple && (artistName || albumName)) {
         try {
             console.log('Buscando Apple Music via iTunes Search API...');
@@ -465,7 +487,7 @@ async function searchAlbumLinks(spotifyUrl, artistName = "", albumName = "") {
         }
     }
 
-    // Se o Deezer não foi encontrado pelo Odesli, tentamos a API do Deezer via Proxy
+    // Deezer via Deezer Search API Proxy
     if (!deezer && (artistName || albumName)) {
         try {
             console.log('Buscando Deezer via Deezer Search API Proxy...');
@@ -480,6 +502,59 @@ async function searchAlbumLinks(spotifyUrl, artistName = "", albumName = "") {
             }
         } catch (deezerErr) {
             console.warn('Erro ao buscar na Deezer Search API:', deezerErr);
+        }
+    }
+
+    // Etapa 3: Se ainda restarem links a serem preenchidos, tentamos usar o Odesli com as URLs alternativas encontradas
+    if (!yt || !amazon || !deezer || !apple) {
+        // Se temos um link da Apple Music, consultamos o Odesli com a URL da Apple Music
+        if (apple) {
+            try {
+                console.log('Tentando preencher links restantes consultando Odesli com a URL da Apple Music...');
+                const odesliAppleResult = await fetchOdesliLinks(apple);
+                if (odesliAppleResult) {
+                    if (!yt) yt = odesliAppleResult.yt;
+                    if (!deezer) deezer = odesliAppleResult.deezer;
+                    if (!amazon) amazon = odesliAppleResult.amazon;
+                    console.log('Links adicionais encontrados usando URL da Apple Music:', odesliAppleResult);
+                }
+            } catch (appleOdesliErr) {
+                console.warn('Erro ao consultar Odesli com a URL da Apple Music:', appleOdesliErr);
+            }
+        }
+
+        // Se ainda faltar algo e temos um link do Deezer, consultamos o Odesli com a URL do Deezer
+        if ((!yt || !amazon || !apple) && deezer) {
+            try {
+                console.log('Tentando preencher links restantes consultando Odesli com a URL do Deezer...');
+                const odesliDeezerResult = await fetchOdesliLinks(deezer);
+                if (odesliDeezerResult) {
+                    if (!yt) yt = odesliDeezerResult.yt;
+                    if (!apple) apple = odesliDeezerResult.apple;
+                    if (!amazon) amazon = odesliDeezerResult.amazon;
+                    console.log('Links adicionais encontrados usando URL do Deezer:', odesliDeezerResult);
+                }
+            } catch (deezerOdesliErr) {
+                console.warn('Erro ao consultar Odesli com a URL do Deezer:', deezerOdesliErr);
+            }
+        }
+    }
+
+    // Etapa 4: Se o YouTube Music ainda estiver faltando, tentamos a busca direta via nosso YouTube Proxy
+    if (!yt && (artistName || albumName)) {
+        try {
+            console.log('Buscando YouTube Music via YouTube Search Scraper Proxy...');
+            const term = `${artistName} ${albumName} album`.trim();
+            const ytRes = await fetch(`/api/youtube-proxy?q=${encodeURIComponent(term)}`);
+            if (ytRes.ok) {
+                const ytData = await ytRes.json();
+                if (ytData.url) {
+                    yt = ytData.url;
+                    console.log('Link do YouTube Music encontrado via YouTube Proxy:', yt);
+                }
+            }
+        } catch (ytErr) {
+            console.warn('Erro ao buscar na YouTube Search Proxy:', ytErr);
         }
     }
 

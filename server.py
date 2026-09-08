@@ -127,6 +127,57 @@ class PlaylistHandler(SimpleHTTPRequestHandler):
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
+        elif self.path.startswith('/api/youtube-proxy'):
+            from urllib.parse import urlparse, parse_qs, quote
+            import urllib.request
+            import re
+            parsed_url = urlparse(self.path)
+            params = parse_qs(parsed_url.query)
+            query = params.get('q', [None])[0]
+            
+            if not query:
+                self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Parâmetro q é obrigatório"}).encode('utf-8'))
+                return
+                
+            try:
+                # Search YouTube standard results
+                url = f"https://www.youtube.com/results?search_query={quote(query)}"
+                req = urllib.request.Request(
+                    url, 
+                    headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+                )
+                with urllib.request.urlopen(req, timeout=10) as response:
+                    html = response.read().decode('utf-8')
+                
+                # Look for official album playlist
+                match = re.search(r'"playlistId"\s*:\s*"(OLAK5uy_[a-zA-Z0-9_-]+)"', html)
+                if match:
+                    playlist_id = match.group(1)
+                    yt_url = f"https://music.youtube.com/playlist?list={playlist_id}"
+                else:
+                    # Look for standard playlist
+                    match2 = re.search(r'"playlistId"\s*:\s*"(PL[a-zA-Z0-9_-]+)"', html)
+                    if match2:
+                        playlist_id = match2.group(1)
+                        yt_url = f"https://music.youtube.com/playlist?list={playlist_id}"
+                    else:
+                        yt_url = ""
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"url": yt_url}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
         else:
             # Serve arquivos estáticos locais
             super().do_GET()

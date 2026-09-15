@@ -21,42 +21,65 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# Variáveis configuráveis (podem ser alteradas aqui ou inseridas interativamente)
-DOMAIN="seu-dominio.com"
-EMAIL="seu-email@provedor.com" # Usado para recuperação do Let's Encrypt
+# Variáveis configuráveis (podem ser alteradas aqui, via argumentos ou env vars)
+DOMAIN="${1:-${DOMAIN:-seu-dominio.com}}"
+EMAIL="${2:-${EMAIL:-seu-email@provedor.com}}" # Usado para recuperação do Let's Encrypt
 BASIC_AUTH_USER="admin"
 BASIC_AUTH_PASS="spotygen123"
 WEB_ROOT="/usr/share/nginx/html"
 
-# Interatividade se rodando em terminal interativo e com valores padrão
-if [ -t 0 ]; then
-  if [ "$DOMAIN" = "seu-dominio.com" ]; then
+# Se o domínio não foi passado e não é interativo, tentar inferir usando nip.io com o IP público
+if [ "$DOMAIN" = "seu-dominio.com" ]; then
+  if [ -t 0 ]; then
     read -p "Digite o seu domínio/IP (ex: 150.136.84.82.nip.io ou app.meudominio.com): " INPUT_DOMAIN
     [ -n "$INPUT_DOMAIN" ] && DOMAIN="$INPUT_DOMAIN"
+  else
+    PUB_IP=$(curl -s --connect-timeout 5 https://ifconfig.me || echo "")
+    if [ -n "$PUB_IP" ]; then
+      DOMAIN="${PUB_IP}.nip.io"
+      echo -e "${YELLOW}Ambiente não-interativo detectado. Usando domínio automático: $DOMAIN${NC}"
+    fi
   fi
-  if [ "$EMAIL" = "seu-email@provedor.com" ]; then
+fi
+
+if [ "$EMAIL" = "seu-email@provedor.com" ]; then
+  if [ -t 0 ]; then
     read -p "Digite seu e-mail para alertas do Let's Encrypt: " INPUT_EMAIL
     [ -n "$INPUT_EMAIL" ] && EMAIL="$INPUT_EMAIL"
+  else
+    EMAIL="admin@$DOMAIN"
   fi
 fi
 
-
 echo -e "${YELLOW}[1/6] Atualizando pacotes e instalando dependências...${NC}"
-# Ativar repositórios necessários para Oracle Linux / CentOS
+# Ativar repositórios necessários para Oracle Linux / CentOS / RHEL (7, 8, 9)
 if [ -f /etc/oracle-release ]; then
-  yum install -y oracle-epel-release-el7 || yum install -y oracle-epel-release-el8 || true
+  dnf install -y oracle-epel-release-el9 2>/dev/null || dnf install -y oracle-epel-release-el8 2>/dev/null || yum install -y oracle-epel-release-el7 2>/dev/null || dnf install -y epel-release 2>/dev/null || yum install -y epel-release 2>/dev/null || true
 elif [ -f /etc/redhat-release ]; then
-  yum install -y epel-release || true
+  dnf install -y epel-release 2>/dev/null || yum install -y epel-release 2>/dev/null || true
 fi
 
-yum update -y
-yum install -y nginx certbot python2-certbot-nginx httpd-tools git
+if command -v dnf >/dev/null 2>&1; then
+  dnf update -y || true
+  dnf install -y nginx certbot python3-certbot-nginx httpd-tools git python3
+else
+  yum update -y || true
+  yum install -y nginx certbot python3-certbot-nginx httpd-tools git python3 || yum install -y nginx certbot python2-certbot-nginx httpd-tools git python3
+fi
+
+# Liberar portas no Firewalld se estiver ativo
+if command -v firewall-cmd >/dev/null 2>&1 && systemctl is-active --quiet firewalld; then
+  echo -e "${YELLOW}Configurando regras do Firewalld (HTTP/HTTPS)...${NC}"
+  firewall-cmd --permanent --add-service=http || true
+  firewall-cmd --permanent --add-service=https || true
+  firewall-cmd --reload || true
+fi
 
 echo -e "${YELLOW}[2/6] Configurando Diretório Web e copiando arquivos...${NC}"
 mkdir -p "$WEB_ROOT"
 # Se executado a partir da pasta clonada do repositório, copia os arquivos do app
 if [ -f "index.html" ] && [ -f "app.js" ]; then
-  cp index.html style.css app.js config.js lps.html lps.css logo.jpg server.py "$WEB_ROOT/"
+  cp -rf index.html admin.html admin.js app.js config.js gerador.html lps.html lps.css logo.jpg playlists.json server.py style.css "$WEB_ROOT/" 2>/dev/null || true
   # Copiar serviço systemd
   if [ -f "spotygen-backend.service" ]; then
     cp spotygen-backend.service /etc/systemd/system/

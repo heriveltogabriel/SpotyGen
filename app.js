@@ -15,7 +15,8 @@ const state = {
     currentTracks: [],
     originalAlbumUrl: '',
     collectionItems: [],
-    collectionExpandedIndex: null
+    collectionExpandedIndex: null,
+    nextLpNumber: 38
 };
 
 // Elementos da DOM
@@ -700,7 +701,7 @@ function renderTracklist(item, badgeText, subtitleText, tracks) {
     }
 
     DOM.playlistTitle.value = defaultTitle;
-    DOM.playlistDesc.value = 'LP da Semana';
+    DOM.playlistDesc.value = `LP da Semana #${state.nextLpNumber}`;
 
     DOM.previewPlaceholder.classList.add('hidden');
     DOM.previewContent.classList.remove('hidden');
@@ -708,170 +709,107 @@ function renderTracklist(item, badgeText, subtitleText, tracks) {
 }
 
 // -------------------------------------------------------------
-// PLAYLIST CREATION FUNCTION
+// LP PUBLISHING FUNCTION (Direto no sistema, sem criar playlist no Spotify)
 // -------------------------------------------------------------
 DOM.btnGeneratePlaylist.addEventListener('click', async () => {
     if (!state.user) {
         showToast('Conecte ao Spotify primeiro!', 'error');
         return;
     }
-    if (state.currentTracks.length === 0) {
-        showToast('Nenhuma música selecionada.', 'error');
+    if (!state.selectedItem) {
+        showToast('Selecione um disco primeiro!', 'error');
         return;
     }
 
     DOM.btnGeneratePlaylist.disabled = true;
-    DOM.btnGeneratePlaylist.innerHTML = '<i class="spinner"></i> Criando...';
+    DOM.btnGeneratePlaylist.innerHTML = '<i class="spinner"></i> Publicando...';
 
     try {
-        const title = DOM.playlistTitle.value.trim() || 'Minha Playlist PlaylistGen';
-        const description = DOM.playlistDesc.value.trim();
+        const title = DOM.playlistTitle.value.trim() || (state.selectedItem ? state.selectedItem.name : 'LP da Semana');
+        const description = DOM.playlistDesc.value.trim() || `LP da Semana #${state.nextLpNumber}`;
 
-        // 1. Criar Playlist Vazia
-        let playlist;
-        try {
-            playlist = await spotifyRequest('/me/playlists', {
-                method: 'POST',
-                body: JSON.stringify({
-                    name: title,
-                    description: description,
-                    public: true // cria como pública
-                })
-            });
-        } catch (err1) {
-            throw new Error(`Etapa 1 (Criar Playlist) falhou: ${err1.message}`);
+        // 1. Obter a URL do Spotify do Álbum (do input ou do item selecionado)
+        let spotUrl = DOM.linkSpotify ? DOM.linkSpotify.value.trim() : '';
+        if (!spotUrl && state.originalAlbumUrl) {
+            spotUrl = state.originalAlbumUrl;
+        } else if (!spotUrl && state.selectedItem) {
+            spotUrl = state.selectedItem.external_urls?.spotify || `https://open.spotify.com/album/${state.selectedItem.id}`;
         }
 
-        if (playlist && playlist.id) {
-            // 2. Adicionar faixas à playlist criada
-            const trackUris = state.currentTracks.map(t => t.uri).filter(uri => !!uri);
-            console.log('Playlist criada com ID:', playlist.id);
-            console.log('Músicas identificadas para adicionar (URIs):', trackUris);
-            
-            if (trackUris.length === 0) {
-                throw new Error("A lista de músicas selecionadas está vazia ou os identificadores são inválidos.");
-            }
-            
-            const chunkSize = 100;
-            try {
-                for (let i = 0; i < trackUris.length; i += chunkSize) {
-                    const chunk = trackUris.slice(i, i + chunkSize);
-                    console.log(`Enviando lote de músicas para playlist ${playlist.id}:`, chunk);
-                    await spotifyRequest(`/playlists/${playlist.id}/items`, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            uris: chunk
-                        })
-                    });
-                }
-            } catch (err2) {
-                throw new Error(`Etapa 2 (Adicionar Músicas) falhou: ${err2.message}`);
-            }
-
-            // Registrar no backend público do PlaylistGen
-            try {
-                let imageUrl = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80';
-                if (state.selectedItem && state.selectedItem.images && state.selectedItem.images.length > 0) {
-                    imageUrl = state.selectedItem.images[0].url;
-                } else if (state.currentTracks && state.currentTracks[0] && state.currentTracks[0].album && state.currentTracks[0].album.images && state.currentTracks[0].album.images.length > 0) {
-                    imageUrl = state.currentTracks[0].album.images[0].url;
-                }
-
-                // Determinar o ID do Álbum no Spotify
-                let albumId = '';
-                if (state.searchType === 'album' && state.selectedItem) {
-                    albumId = state.selectedItem.id;
-                } else if (state.currentTracks.length > 0 && state.currentTracks[0].album) {
-                    const trackAlbum = state.currentTracks[0].album;
-                    if (trackAlbum.id) {
-                        albumId = trackAlbum.id;
-                    } else {
-                        const match = trackAlbum.uri?.match(/album:([a-zA-Z0-9]+)/);
-                        if (match) albumId = match[1];
-                    }
-                }
-
-                let spotUrl = playlist.external_urls.spotify;
-                let ytUrl = "";
-                let appleUrl = "";
-                let deezerUrl = "";
-                let amazonUrl = "";
-
-                if (state.searchType === 'album') {
-                    // Use input values because the user might have customized them
-                    const enteredSpotUrl = DOM.linkSpotify.value.trim();
-                    if (enteredSpotUrl && enteredSpotUrl !== state.originalAlbumUrl) {
-                        spotUrl = enteredSpotUrl;
-                    }
-                    ytUrl = DOM.linkYoutube.value.trim();
-                    appleUrl = DOM.linkApple.value.trim();
-                    deezerUrl = DOM.linkDeezer.value.trim();
-                    amazonUrl = DOM.linkAmazon.value.trim();
-                } else if (albumId) {
-                    try {
-                        const albumData = await spotifyRequest(`/albums/${albumId}`);
-                        const spotifyAlbumUrl = albumData.external_urls?.spotify || `https://open.spotify.com/album/${albumId}`;
-                        const odesliRes = await fetch(`/api/odesli-proxy?url=${encodeURIComponent(spotifyAlbumUrl)}`);
-                        if (odesliRes.ok) {
-                            const odesliData = await odesliRes.json();
-                             if (odesliData.linksByPlatform) {
-                                 ytUrl = odesliData.linksByPlatform.youtubeMusic?.url || odesliData.linksByPlatform.youtube?.url || "";
-                                 appleUrl = odesliData.linksByPlatform.appleMusic?.url || odesliData.linksByPlatform.itunes?.url || "";
-                                deezerUrl = odesliData.linksByPlatform.deezer?.url || "";
-                                amazonUrl = odesliData.linksByPlatform.amazonMusic?.url || "";
-                            }
-                        }
-                    } catch (errAlbumInfo) {
-                        console.warn('Erro ao obter detalhes do álbum / Odesli:', errAlbumInfo);
-                    }
-                }
-
-                await fetch('/api/playlists', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: title,
-                        description: description || `Playlist criada por PlaylistGen`,
-                        spotifyUrl: spotUrl,
-                        imageUrl: imageUrl,
-                        youtubeUrl: ytUrl,
-                        appleMusicUrl: appleUrl,
-                        deezerUrl: deezerUrl,
-                        amazonMusicUrl: amazonUrl
-                    })
-                });
-                console.log('Playlist cadastrada no backend com sucesso!');
-            } catch (errBackend) {
-                console.error('Erro ao cadastrar playlist no backend:', errBackend);
-            }
-
-            showToast(`Playlist "${title}" criada e publicada com sucesso!`, 'success');
-            
-            // Resetar formulário
-            DOM.playlistMetaSettings.classList.add('hidden');
-            DOM.platformLinksGroup.classList.add('hidden');
-            DOM.previewContent.classList.add('hidden');
-            DOM.previewPlaceholder.classList.remove('hidden');
-            DOM.searchInput.value = '';
-            DOM.playlistTitle.value = '';
-            DOM.playlistDesc.value = '';
-            DOM.linkSpotify.value = '';
-            DOM.linkYoutube.value = '';
-            DOM.linkApple.value = '';
-            DOM.linkDeezer.value = '';
-            DOM.linkAmazon.value = '';
-            updateSearchHelpers("", "");
-            state.selectedItem = null;
-            state.currentTracks = [];
+        if (!spotUrl) {
+            throw new Error("URL do álbum no Spotify não encontrada.");
         }
+
+        // 2. Determinar a Imagem da Capa
+        let imageUrl = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80';
+        if (state.selectedItem && state.selectedItem.images && state.selectedItem.images.length > 0) {
+            imageUrl = state.selectedItem.images[0].url;
+        } else if (state.currentTracks && state.currentTracks[0] && state.currentTracks[0].album && state.currentTracks[0].album.images && state.currentTracks[0].album.images.length > 0) {
+            imageUrl = state.currentTracks[0].album.images[0].url;
+        }
+
+        // 3. Links das outras plataformas (obtidos via Odesli / preenchidos)
+        const ytUrl = DOM.linkYoutube ? DOM.linkYoutube.value.trim() : '';
+        const appleUrl = DOM.linkApple ? DOM.linkApple.value.trim() : '';
+        const deezerUrl = DOM.linkDeezer ? DOM.linkDeezer.value.trim() : '';
+        const amazonUrl = DOM.linkAmazon ? DOM.linkAmazon.value.trim() : '';
+
+        // 4. Salvar diretamente no backend local do LP da Semana (sem criar playlist na conta do usuário)
+        const response = await fetch('/api/playlists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: title,
+                description: description,
+                spotifyUrl: spotUrl,
+                imageUrl: imageUrl,
+                youtubeUrl: ytUrl,
+                appleMusicUrl: appleUrl,
+                deezerUrl: deezerUrl,
+                amazonMusicUrl: amazonUrl
+            })
+        });
+
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || `Falha ao salvar no servidor (HTTP ${response.status})`);
+        }
+
+        showToast(`LP "${title}" publicado com sucesso!`, 'success');
+
+        // Incrementar número do próximo LP
+        const currentMatch = description.match(/#(\d+)/);
+        if (currentMatch) {
+            state.nextLpNumber = parseInt(currentMatch[1], 10) + 1;
+        } else {
+            state.nextLpNumber++;
+        }
+        updateNextLpNumber();
+        
+        // Resetar formulário
+        DOM.playlistMetaSettings.classList.add('hidden');
+        DOM.platformLinksGroup.classList.add('hidden');
+        DOM.previewContent.classList.add('hidden');
+        DOM.previewPlaceholder.classList.remove('hidden');
+        DOM.searchInput.value = '';
+        DOM.playlistTitle.value = '';
+        DOM.playlistDesc.value = '';
+        DOM.linkSpotify.value = '';
+        DOM.linkYoutube.value = '';
+        DOM.linkApple.value = '';
+        DOM.linkDeezer.value = '';
+        DOM.linkAmazon.value = '';
+        updateSearchHelpers("", "");
+        state.selectedItem = null;
+        state.currentTracks = [];
     } catch (e) {
         console.error(e);
-        showToast(`Erro ao criar playlist: ${e.message}`, 'error');
+        showToast(`Erro ao publicar LP: ${e.message}`, 'error');
     } finally {
         DOM.btnGeneratePlaylist.disabled = false;
-        DOM.btnGeneratePlaylist.innerHTML = '<i data-lucide="plus-circle"></i> Criar & Publicar LP';
+        DOM.btnGeneratePlaylist.innerHTML = '<i data-lucide="plus-circle"></i> Publicar LP';
         lucide.createIcons();
     }
 });
@@ -1095,12 +1033,53 @@ if (DOM.btnClearAll) {
 }
 
 // -------------------------------------------------------------
+// HELPER: DETECÇÃO AUTOMÁTICA DO PRÓXIMO NÚMERO DO LP DA SEMANA
+// -------------------------------------------------------------
+async function updateNextLpNumber() {
+    try {
+        let response;
+        try {
+            response = await fetch('/api/playlists');
+            if (!response.ok) throw new Error('API indisponível');
+        } catch (_) {
+            response = await fetch('playlists.json');
+        }
+        if (response && response.ok) {
+            const list = await response.json();
+            let maxNum = 0;
+            if (Array.isArray(list)) {
+                for (const item of list) {
+                    if (item && item.description) {
+                        const match = item.description.match(/#(\d+)/);
+                        if (match) {
+                            const val = parseInt(match[1], 10);
+                            if (!isNaN(val) && val > maxNum) {
+                                maxNum = val;
+                            }
+                        }
+                    }
+                }
+            }
+            if (maxNum > 0) {
+                state.nextLpNumber = maxNum + 1;
+            }
+            console.log(`Próximo número de LP detectado: #${state.nextLpNumber}`);
+        }
+    } catch (e) {
+        console.warn('Erro ao calcular próximo número de LP:', e);
+    }
+}
+
+// -------------------------------------------------------------
 // APP INITIALIZATION
 // -------------------------------------------------------------
 async function initApp() {
     DOM.uriDisplay.textContent = CONFIG.REDIRECT_URI;
     checkSetupBanner();
     
+    // Obter próximo número do LP da Semana automaticamente
+    await updateNextLpNumber();
+
     // Processar retorno do Spotify OAuth se houver code na URL
     await handleCallback();
 

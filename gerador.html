@@ -74,7 +74,7 @@
                 <section class="panel glass-panel search-panel">
                     <div class="panel-header">
                         <i data-lucide="sparkles" class="spotify-green-text"></i>
-                        <h2>Criar Nova Playlist</h2>
+                        <h2>Buscar e Publicar LP</h2>
                     </div>
 
                     <div class="form-group">
@@ -109,12 +109,12 @@
 
                     <div class="playlist-settings-group hidden" id="playlist-meta-settings">
                         <div class="form-group">
-                            <label for="playlist-title">Nome da Playlist</label>
+                            <label for="playlist-title">Título do Álbum / Artista</label>
                             <input type="text" id="playlist-title" placeholder="Minha Playlist Gerada">
                         </div>
                         <div class="form-group">
                             <label for="playlist-desc">Descrição</label>
-                            <textarea id="playlist-desc" rows="2" placeholder="Playlist criada automaticamente pelo PlaylistGen."></textarea>
+                            <textarea id="playlist-desc" rows="2" placeholder="Ex: LP da Semana #38"></textarea>
                         </div>
                         <!-- Platform Links Section -->
                         <div class="platform-links-group hidden" id="platform-links-group" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
@@ -167,7 +167,7 @@
                         </div>
 
                         <button id="btn-generate-playlist" class="btn-success btn-full" style="margin-top: 1.5rem;">
-                            <i data-lucide="plus-circle"></i> Criar & Publicar LP
+                            <i data-lucide="plus-circle"></i> Publicar LP
                         </button>
                     </div>
                 </section>
@@ -181,7 +181,7 @@
                     
                     <div id="preview-placeholder" class="preview-placeholder">
                         <i data-lucide="music" class="placeholder-icon"></i>
-                        <p>Busque um artista ou disco e selecione um resultado para pré-visualizar as faixas que serão incluídas na sua playlist.</p>
+                        <p>Busque um artista ou disco e selecione um resultado para pré-visualizar as faixas e obter os links para publicação.</p>
                     </div>
 
                     <div id="preview-content" class="preview-content hidden">
@@ -284,7 +284,7 @@
     <div id="toast-container" class="toast-container"></div>
 
     <script src="config.js?v=1.9"></script>
-    <script src="app.js?v=1.9"></script>
+    <script src="app.js?v=2.1"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
